@@ -9,10 +9,13 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 
+import ElementPlus from 'element-plus';
+import "element-plus/dist/index.css";
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(ElementPlus)
 
 app.mount('#app')

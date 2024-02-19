@@ -10,9 +10,9 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/comparison',
-      name: 'comparison',
-      component: () => import('../views/ComparisonView.vue')
+      path: '/reconciliation',
+      name: 'reconciliation',
+      component: () => import('../views/ReconciliationView.vue')
     }
   ]
 })

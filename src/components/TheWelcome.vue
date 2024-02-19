@@ -13,7 +13,7 @@ export default {
     login() {
       if (this.account != '' && this.password != '') {
         console.log(this.account, this.password);
-        this.$router.push('/comparison')
+        this.$router.push('/reconciliation')
       } else {
         alert("帳號或密碼不得為空！");
       }
