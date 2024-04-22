@@ -8,21 +8,27 @@
           style="width: 100%"
           v-model="searchData.date"
           type="date"
-          placeholder="請選擇對帳日期"
+          placeholder="請選擇入帳日期"
           format="YYYY/MM/DD"
           value-format="YYYY-MM-DD"
+          :disabled-date="disabledDate"
         />
       </div>
 
       <div class="col-md-3">
-        <el-select v-model="searchData.payment" placeholder="請選擇金流來源">
-          <el-option v-for="item in payments" :key="item" :label="item" :value="item" />
+        <el-select v-model="searchData.cashFlowSource" placeholder="請選擇金流來源">
+          <el-option v-for="item in cashFlowSources" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
 
       <div class="col-md-3">
         <el-select v-model="searchData.bankAccount" placeholder="請選擇銀行來源">
-          <el-option v-for="item in bankAccounts" :key="item" :label="item" :value="item" />
+          <el-option
+            v-for="item in bankAccounts"
+            :key="item.account"
+            :label="item.account"
+            :value="item.account"
+          />
         </el-select>
       </div>
 
@@ -32,15 +38,9 @@
       </div>
     </form>
 
-    <div class="d-flex justify-content-between">
-      <p class="text-danger">
-        銀行帳未核銷日期：1/2、1/5 <br />
-        <span>未核筆數 {{ bankFlow.length }} 筆 / 總筆數 10 筆</span>
-      </p>
-      <p class="text-end">
-        <br /><span class="bg-success text-white p-1">綠底標註</span>為符合的比對結果
-      </p>
-    </div>
+    <p class="text-end">
+      <br /><span class="bg-success text-white p-1">綠底標註</span>為符合的比對結果
+    </p>
 
     <div class="row">
       <div class="col-md-6">
@@ -124,16 +124,23 @@
 <script>
 import { ElLoading } from 'element-plus'
 
+// import { API } from '../App.vue'
+
 export default {
   data() {
     return {
+      disabledDate(time) {
+        return time.getTime() > Date.now()
+      },
       searchData: {
         date: '',
-        payment: '',
+        cashFlowSource: '',
         bankAccount: ''
       },
-      // 金流來源 payments
-      payments: [],
+      // 搜尋條件來源
+      searchOrigin: [],
+      // 金流來源 cashFlowSources bankMemo欄位
+      cashFlowSources: [],
       //   銀行來源 bankAccounts
       bankAccounts: [],
       isComparing: false,
@@ -148,25 +155,64 @@ export default {
     }
   },
   methods: {
-    getStations() {
-      this.stations = [
-        { id: 64, name: '力揚林口廣停二' },
-        { id: 98, name: '力揚基隆麥金' },
-        { id: 119, name: '力揚八里舊城' },
-        { id: 191, name: '力揚第一運動場西門' },
-        { id: 199, name: '力揚信義區公所' }
+    getSearchOrigin() {
+      this.searchOrigin = [
+        {
+          id: 1,
+          companyId: 1,
+          bankMemo: 'iPASS MONEY',
+          voucherDesc: '一卡通',
+          message: null,
+          bankId: 1,
+          name: '力揚彰銀臨停',
+          bankCode: '009',
+          account: '41150119912400'
+        },
+        {
+          id: 2,
+          companyId: 1,
+          bankMemo: '國泰世華商連加',
+          voucherDesc: '連加',
+          message: null,
+          bankId: 1,
+          name: '力揚彰銀臨停一',
+          bankCode: '009',
+          account: '41150119912401'
+        },
+        {
+          id: 3,
+          companyId: 1,
+          bankMemo: '悠遊卡公司',
+          voucherDesc: '悠遊卡',
+          message: '悠遊卡舊系統',
+          bankId: 1,
+          name: '力揚彰銀臨停',
+          bankCode: '009',
+          account: '41150119912406'
+        }
       ]
+      this.getCashFlowSources()
+      this.getBankAccountSources()
     },
-    getPayments() {
-      this.payments = ['悠遊卡', '街口支付', 'LinePay']
+    // 金流來源選項
+    getCashFlowSources() {
+      this.cashFlowSources = this.searchOrigin.map((item) => {
+        return item.bankMemo.trim()
+      })
     },
-    getbankAccounts() {
-      this.bankAccounts = ['00912345678900', '00912345678901', '00912345678902']
+    // 銀行來源選項
+    getBankAccountSources() {
+      this.bankAccounts = this.searchOrigin.map((item) => {
+        return {
+          name: item.name.trim(),
+          account: `${item.bankCode}${item.account}`
+        }
+      })
     },
     show() {
       if (
         this.searchData.date !== '' &&
-        this.searchData.payment !== '' &&
+        this.searchData.cashFlowSource !== '' &&
         this.searchData.bankAccount !== ''
       ) {
         const loading = ElLoading.service({
@@ -223,48 +269,53 @@ export default {
       ]
     },
     getSystemFlow() {
-      this.getStations()
+      // const getSystemFlowAPI = `${API}/main/tradeSum`
+      // console.log(getSystemFlowAPI)
       this.systemFlow = [
         {
           id: 64,
           postingDate: '2024-01-01',
           amount: 970,
-          transactionCode: 'y11111111'
+          transactionCode: 'y11111111',
+          stationName: '富岡停一停車場'
         },
         {
           id: 98,
           postingDate: '2024-01-01',
           amount: 1230,
-          transactionCode: 'y22222222'
+          transactionCode: 'y22222222',
+          stationName: '南崁廣停一'
         },
         {
           id: 119,
           postingDate: '2024-01-01',
           amount: 1200,
-          transactionCode: 'y33333333'
+          transactionCode: 'y33333333',
+          stationName: '瑞芳消防分隊營業所'
         },
         {
           id: 191,
           postingDate: '2024-01-01',
           amount: 900,
-          transactionCode: 'y44444444'
+          transactionCode: 'y44444444',
+          stationName: '桃園停三'
         },
         {
           id: 199,
           postingDate: '2024-01-01',
           amount: 500,
-          transactionCode: 'y55555555'
+          transactionCode: 'y55555555',
+          stationName: '桃園停一'
         }
       ]
-      this.systemFlow.forEach((systemItem) => {
-        const matchingStation = this.stations.find(
-          (stationItem) => systemItem.id === stationItem.id
-        )
-
-        if (matchingStation) {
-          systemItem.stationName = matchingStation.name
-        }
-      })
+      // this.axios
+      //   .post(getSystemFlowAPI, {
+      //     consumeType: this.searchData.consumeType,
+      //     date: this.searchData.date
+      //   })
+      //   .then((response) => {
+      //     console.log('這是系統帳哦～', response)
+      //   })
     },
     // 數字千分位格式
     amountFormatter(row, column, cellValue) {
@@ -349,7 +400,7 @@ export default {
       this.transferData = this.bankFlow.filter((e) => e.stationName != '')
       if (this.transferData.length > 0) {
         this.bankFlow = this.bankFlow.filter((e) => e.stationName == '')
-        alert("完成轉傳票")
+        alert('完成轉傳票')
         console.log('轉傳票', this.transferData)
       } else {
         alert('無可以轉傳票的資料！')
@@ -357,8 +408,7 @@ export default {
     }
   },
   mounted() {
-    this.getPayments()
-    this.getbankAccounts()
+    this.getSearchOrigin()
   }
 }
 </script>
