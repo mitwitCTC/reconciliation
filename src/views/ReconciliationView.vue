@@ -137,6 +137,7 @@
             width="110"
           />
           <el-table-column align="center" prop="transactionCode" label="交易代號" width="100" />
+          <el-table-column align="center" prop="department" label="部門" width="100" />
           <el-table-column align="center" label="明細" width="180">
             <template v-slot="scope">
               <el-button @click="openDetailDialog(scope)">查看明細</el-button>
@@ -166,6 +167,14 @@
             </template>
           </el-table-column>
           <el-table-column align="center" property="transactionTime" label="交易時間" sortable />
+          <el-table-column
+            align="center"
+            property="amount"
+            label="金額"
+            sortable
+            :formatter="amountFormatter"
+          />
+          <!-- <template v-slot="scope">
               <el-input
                 v-model="scope.row.amount"
                 @keyup.enter="handleDetailAmountChange(scope.row)"
@@ -174,7 +183,7 @@
                 type="number"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column align="center" label="調整">
             <template v-slot="scope">
               <el-button @click="handleDetailAmountChange(scope.row)">確認調整</el-button>
@@ -355,7 +364,8 @@ export default {
           fee: 15,
           depositAmount: 500,
           transactionCode: 'y11111111',
-          station: '富岡停一停車場'
+          station: '富岡停一停車場',
+          department: '部門一'
         },
         {
           id: 98,
@@ -364,7 +374,8 @@ export default {
           fee: 15,
           depositAmount: 900,
           transactionCode: 'y22222222',
-          station: '南崁廣停一'
+          station: '南崁廣停一',
+          department: '部門二'
         },
         {
           id: 119,
@@ -373,7 +384,8 @@ export default {
           fee: 15,
           depositAmount: 1300,
           transactionCode: 'y33333333',
-          station: '瑞芳消防分隊營業所'
+          station: '瑞芳消防分隊營業所',
+          department: '部門一'
         },
         {
           id: 191,
@@ -382,7 +394,8 @@ export default {
           fee: 15,
           depositAmount: 500,
           transactionCode: 'y44444444',
-          station: '桃園停三'
+          station: '桃園停三',
+          department: '部門一'
         },
         {
           id: 199,
@@ -391,7 +404,8 @@ export default {
           fee: 15,
           depositAmount: 500,
           transactionCode: 'y55555555',
-          station: '桃園停一'
+          station: '桃園停一',
+          department: '部門二'
         }
       ]
       // this.axios
