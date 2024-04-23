@@ -135,10 +135,21 @@
         title="交易明細"
         width="70vw"
       >
-        <el-table :data="systemFlowDetails">
-          <el-table-column align="center" property="transactionTime" label="交易時間" />
-          <el-table-column align="center" label="金額">
+        <el-table :data="systemFlowDetails" height="500">
+          <el-table-column align="center" property="outDate" label="入帳日期">
             <template v-slot="scope">
+              <el-date-picker
+                class="align-self-stretch"
+                v-model="scope.row.outDate"
+                type="date"
+                placeholder="請選擇入帳日期"
+                format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD"
+                :disabled-date="disabledDate"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column align="center" property="transactionTime" label="交易時間" sortable />
               <el-input
                 v-model="scope.row.amount"
                 @keyup.enter="handleDetailAmountChange(scope.row)"
@@ -421,38 +432,47 @@ export default {
       this.dialogTableVisible = true
       this.systemFlowDetails = [
         {
+          outDate: '2024-01-01',
           transactionTime: '12:30:43',
           amount: 80
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '14:11:34',
           amount: 120
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '16:51:11',
           amount: 160
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '18:40:51',
           amount: 160
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '18:53:20',
           amount: 80
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '19:11:45',
           amount: 200
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '19:41:38',
           amount: 160
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '20:28:54',
           amount: 40
         },
         {
+          outDate: '2024-01-01',
           transactionTime: '21:53:28',
           amount: 200
         }
