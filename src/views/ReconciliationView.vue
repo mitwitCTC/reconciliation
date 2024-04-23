@@ -95,7 +95,23 @@
           height="450"
         >
           <el-table-column align="center" prop="station" label="場站名稱" width="180" />
-          <el-table-column align="center" prop="postingDate" label="入帳日" width="210" />
+          <el-table-column align="center" prop="postingDate" label="入帳日" width="210">
+            <template v-slot="scope">
+              <div class="d-flex justify-content-between">
+                <el-date-picker
+                  class="align-self-stretch"
+                  style="width: 100%"
+                  v-model="scope.row.postingDate"
+                  type="date"
+                  placeholder="請選擇入帳日期"
+                  format="YYYY/MM/DD"
+                  value-format="YYYY-MM-DD"
+                  :disabled-date="disabledDate"
+                />
+                <el-button @click="handlePostingDateChange(scope.row)">修改</el-button>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             prop="depositAmount"
