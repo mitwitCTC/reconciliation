@@ -45,6 +45,17 @@
     <div class="row">
       <div class="col-md-6">
         <h2 class="text-center my-2">銀行帳</h2>
+        <p v-if="countBankFlow > 0" class="text-end">
+          共&nbsp;
+          <strong>{{ countBankFlow }}</strong>
+          &nbsp;筆
+          <span>
+            &nbsp;/&nbsp;總金額&nbsp;$
+            <strong>{{
+              totalBankFlow.toLocaleString('en', { minimumFractionDigits: 0 })
+            }}</strong></span
+          >
+        </p>
         <el-table
           :data="bankFlow"
           :row-style="{ height: '50px' }"
@@ -66,6 +77,17 @@
       </div>
       <div class="col-md-6">
         <h2 class="text-center my-2">系統帳</h2>
+        <p v-if="countSystemFlow > 0" class="text-end">
+          共&nbsp;
+          <strong>{{ countSystemFlow }}</strong>
+          &nbsp;筆
+          <span>
+            &nbsp;/&nbsp;總金額&nbsp;$
+            <strong>{{
+              totalSystemFlow.toLocaleString('en', { minimumFractionDigits: 0 })
+            }}</strong></span
+          >
+        </p>
         <el-table
           :data="systemFlow"
           :row-style="{ height: '50px' }"
@@ -145,7 +167,11 @@ export default {
       bankAccounts: [],
       isComparing: false,
       bankFlow: [],
+      countBankFlow: null,
+      totalBankFlow: null,
       systemFlow: [],
+      countSystemFlow: null,
+      totalSystemFlow: null,
       dialogTableVisible: false,
       systemFlowDetails: [],
       dialogVisible: false,
@@ -222,8 +248,11 @@ export default {
         })
         setTimeout(() => {
           loading.close()
+          this.countBankFlow = null
+          this.totalBankFlow = null
+          this.countSystemFlow = null
+          this.totalSystemFlow = null
           this.compare()
-          // console.log(this.bankFlow, this.systemFlow)
         }, 2000)
       } else {
         alert('搜尋欄位不得為空！')
@@ -267,6 +296,9 @@ export default {
           note: ''
         }
       ]
+      this.countBankFlow = this.bankFlow.length
+      this.bankFlow.forEach((item) => {
+        this.totalBankFlow += item.amount
       })
     },
     getSystemFlow() {
@@ -317,6 +349,10 @@ export default {
       //   .then((response) => {
       //     console.log('這是系統帳哦～', response)
       //   })
+      this.countSystemFlow = this.systemFlow.length
+      this.systemFlow.forEach((item) => {
+        this.totalSystemFlow += item.amount
+      })
     },
     // 數字千分位格式
     amountFormatter(row, column, cellValue) {
