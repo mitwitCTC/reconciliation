@@ -51,17 +51,17 @@
           :row-class-name="customRowClassName"
           height="450"
         >
-          <el-table-column align="center" prop="stationName" label="場站名稱" width="180" />
+          <el-table-column align="center" prop="station" label="場站名稱" width="180" />
           <el-table-column align="center" prop="postingDate" label="入帳日" width="180" />
           <el-table-column
             align="center"
             prop="amount"
             sortable
             :formatter="amountFormatter"
-            label="金額"
-            width="80"
+            label="入帳金額"
+            width="110"
           />
-          <el-table-column align="center" prop="note" label="備註" width="180" />
+          <el-table-column align="center" prop="note" label="註記" width="180" />
         </el-table>
       </div>
       <div class="col-md-6">
@@ -72,7 +72,7 @@
           :row-class-name="customSystemRowClassName"
           height="450"
         >
-          <el-table-column align="center" prop="stationName" label="場站名稱" width="180" />
+          <el-table-column align="center" prop="station" label="場站名稱" width="180" />
           <el-table-column align="center" prop="postingDate" label="交易日" width="120" />
           <el-table-column
             align="center"
@@ -233,40 +233,41 @@ export default {
       this.bankFlow = [
         {
           id: 1,
-          stationName: '',
+          station: '',
           postingDate: '2024-01-01',
           amount: 1000,
           note: '這是備註訊息'
         },
         {
           id: 2,
-          stationName: '',
+          station: '',
           postingDate: '2024-01-01',
           amount: 1300,
           note: ''
         },
         {
           id: 3,
-          stationName: '',
+          station: '',
           postingDate: '2024-01-01',
           amount: 1200,
           note: '這是備註訊息'
         },
         {
           id: 4,
-          stationName: '',
+          station: '',
           postingDate: '2024-01-01',
           amount: 900,
           note: ''
         },
         {
           id: 5,
-          stationName: '',
+          station: '',
           postingDate: '2024-01-01',
           amount: 500,
           note: ''
         }
       ]
+      })
     },
     getSystemFlow() {
       // const getSystemFlowAPI = `${API}/main/tradeSum`
@@ -277,35 +278,35 @@ export default {
           postingDate: '2024-01-01',
           amount: 970,
           transactionCode: 'y11111111',
-          stationName: '富岡停一停車場'
+          station: '富岡停一停車場'
         },
         {
           id: 98,
           postingDate: '2024-01-01',
           amount: 1230,
           transactionCode: 'y22222222',
-          stationName: '南崁廣停一'
+          station: '南崁廣停一'
         },
         {
           id: 119,
           postingDate: '2024-01-01',
           amount: 1200,
           transactionCode: 'y33333333',
-          stationName: '瑞芳消防分隊營業所'
+          station: '瑞芳消防分隊營業所'
         },
         {
           id: 191,
           postingDate: '2024-01-01',
           amount: 900,
           transactionCode: 'y44444444',
-          stationName: '桃園停三'
+          station: '桃園停三'
         },
         {
           id: 199,
           postingDate: '2024-01-01',
           amount: 500,
           transactionCode: 'y55555555',
-          stationName: '桃園停一'
+          station: '桃園停一'
         }
       ]
       // this.axios
@@ -336,17 +337,17 @@ export default {
         )
 
         if (matchingSystemFlow) {
-          bankItem.stationName = matchingSystemFlow.stationName
+          bankItem.station = matchingSystemFlow.station
         }
       })
       console.log('比對完啦', this.bankFlow)
     },
     customRowClassName({ row }) {
-      return row.stationName !== '' ? 'bg-success text-white' : ''
+      return row.station !== '' ? 'bg-success text-white' : ''
     },
     customSystemRowClassName({ row }) {
       const isMatched = this.bankFlow.some(
-        (item) => item.stationName === row.stationName && item.postingDate === row.postingDate
+        (item) => item.station === row.station && item.postingDate === row.postingDate
       )
       return isMatched ? 'bg-success text-white' : ''
     },
@@ -397,9 +398,9 @@ export default {
       alert('修改成功')
     },
     transfer() {
-      this.transferData = this.bankFlow.filter((e) => e.stationName != '')
+      this.transferData = this.bankFlow.filter((e) => e.station != '')
       if (this.transferData.length > 0) {
-        this.bankFlow = this.bankFlow.filter((e) => e.stationName == '')
+        this.bankFlow = this.bankFlow.filter((e) => e.station == '')
         alert('完成轉傳票')
         console.log('轉傳票', this.transferData)
       } else {
