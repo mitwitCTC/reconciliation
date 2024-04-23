@@ -66,7 +66,7 @@
           <el-table-column align="center" prop="postingDate" label="入帳日" width="180" />
           <el-table-column
             align="center"
-            prop="amount"
+            prop="depositAmount"
             sortable
             :formatter="amountFormatter"
             label="入帳金額"
@@ -95,14 +95,30 @@
           height="450"
         >
           <el-table-column align="center" prop="station" label="場站名稱" width="180" />
-          <el-table-column align="center" prop="postingDate" label="交易日" width="120" />
+          <el-table-column align="center" prop="postingDate" label="入帳日" width="210" />
           <el-table-column
             align="center"
-            prop="amount"
+            prop="depositAmount"
             sortable
             :formatter="amountFormatter"
-            label="金額"
-            width="80"
+            label="入帳金額"
+            width="110"
+          />
+          <el-table-column
+            align="center"
+            prop="transactionAmount"
+            sortable
+            :formatter="amountFormatter"
+            label="交易金額"
+            width="110"
+          />
+          <el-table-column
+            align="center"
+            prop="fee"
+            sortable
+            :formatter="amountFormatter"
+            label="手續費"
+            width="110"
           />
           <el-table-column align="center" prop="transactionCode" label="交易代號" width="100" />
           <el-table-column align="center" label="明細" width="180">
@@ -125,7 +141,7 @@
             <template v-slot="scope">
               <el-input
                 v-model="scope.row.amount"
-                @keyup.enter="handleAmountChange(scope.row)"
+                @keyup.enter="handleDetailAmountChange(scope.row)"
                 :min="0"
                 :step="5"
                 type="number"
@@ -134,7 +150,7 @@
           </el-table-column>
           <el-table-column align="center" label="調整">
             <template v-slot="scope">
-              <el-button @click="handleAmountChange(scope.row)">確認調整</el-button>
+              <el-button @click="handleDetailAmountChange(scope.row)">確認調整</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -264,41 +280,41 @@ export default {
           id: 1,
           station: '',
           postingDate: '2024-01-01',
-          amount: 1000,
+          depositAmount: 1000,
           note: '這是備註訊息'
         },
         {
           id: 2,
           station: '',
           postingDate: '2024-01-01',
-          amount: 1300,
+          depositAmount: 1300,
           note: ''
         },
         {
           id: 3,
           station: '',
           postingDate: '2024-01-01',
-          amount: 1200,
+          depositAmount: 1200,
           note: '這是備註訊息'
         },
         {
           id: 4,
           station: '',
           postingDate: '2024-01-01',
-          amount: 900,
+          depositAmount: 900,
           note: ''
         },
         {
           id: 5,
           station: '',
           postingDate: '2024-01-01',
-          amount: 500,
+          depositAmount: 500,
           note: ''
         }
       ]
       this.countBankFlow = this.bankFlow.length
       this.bankFlow.forEach((item) => {
-        this.totalBankFlow += item.amount
+        this.totalBankFlow += item.depositAmount
       })
     },
     getSystemFlow() {
@@ -308,35 +324,45 @@ export default {
         {
           id: 64,
           postingDate: '2024-01-01',
-          amount: 970,
+          transactionAmount: 515,
+          fee: 15,
+          depositAmount: 500,
           transactionCode: 'y11111111',
           station: '富岡停一停車場'
         },
         {
           id: 98,
           postingDate: '2024-01-01',
-          amount: 1230,
+          transactionAmount: 915,
+          fee: 15,
+          depositAmount: 900,
           transactionCode: 'y22222222',
           station: '南崁廣停一'
         },
         {
           id: 119,
           postingDate: '2024-01-01',
-          amount: 1200,
+          transactionAmount: 1315,
+          fee: 15,
+          depositAmount: 1300,
           transactionCode: 'y33333333',
           station: '瑞芳消防分隊營業所'
         },
         {
           id: 191,
           postingDate: '2024-01-01',
-          amount: 900,
+          transactionAmount: 515,
+          fee: 15,
+          depositAmount: 500,
           transactionCode: 'y44444444',
           station: '桃園停三'
         },
         {
           id: 199,
           postingDate: '2024-01-01',
-          amount: 500,
+          transactionAmount: 515,
+          fee: 15,
+          depositAmount: 500,
           transactionCode: 'y55555555',
           station: '桃園停一'
         }
@@ -351,8 +377,11 @@ export default {
       //   })
       this.countSystemFlow = this.systemFlow.length
       this.systemFlow.forEach((item) => {
-        this.totalSystemFlow += item.amount
+        this.totalSystemFlow += item.depositAmount
       })
+    },
+    handlePostingDateChange(row) {
+      console.log(row)
     },
     // 數字千分位格式
     amountFormatter(row, column, cellValue) {
@@ -369,7 +398,7 @@ export default {
       this.getSystemFlow()
       this.bankFlow.forEach((bankItem) => {
         const matchingSystemFlow = this.systemFlow.find(
-          (systemItem) => systemItem.amount === bankItem.amount
+          (systemItem) => systemItem.depositAmount === bankItem.depositAmount
         )
 
         if (matchingSystemFlow) {
@@ -429,9 +458,13 @@ export default {
         }
       ]
     },
-    handleAmountChange(row) {
-      console.log('金額變更', row)
-      alert('修改成功')
+    handleDetailAmountChange(row) {
+      if ((row.outDate !== null) & (row.amount !== '')) {
+        console.log('交易明細變更', row)
+        alert('修改成功')
+      } else {
+        alert('修改欄位不得為空！')
+      }
     },
     transfer() {
       this.transferData = this.bankFlow.filter((e) => e.station != '')
