@@ -32,4 +32,13 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to) => {
+  const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+  if (to.name !== 'login' && !isAuthenticated) {
+    return { name: 'login' }
+  } else if (to.name == 'login' && isAuthenticated) {
+    router.push('/reconciliation')
+  }
+})
+
 export default router
