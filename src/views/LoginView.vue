@@ -26,7 +26,7 @@ export default {
   methods: {
     login() {
       if (this.account != '' && this.password != '') {
-        console.log(this.account, this.password);
+        sessionStorage.setItem('isAuthenticated', 'true')
         this.$router.push('/reconciliation')
       } else {
         alert("帳號或密碼不得為空！");
