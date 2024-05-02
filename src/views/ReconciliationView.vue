@@ -12,6 +12,7 @@
           format="YYYY/MM/DD"
           value-format="YYYY-MM-DD"
           :disabled-date="disabledDate"
+          :clearable="false"
         />
       </div>
 
@@ -107,6 +108,7 @@
                   format="YYYY/MM/DD"
                   value-format="YYYY-MM-DD"
                   :disabled-date="disabledDate"
+                  :clearable="false"
                 />
                 <el-button @click="handlePostingDateChange(scope.row)">修改</el-button>
               </div>
@@ -163,6 +165,7 @@
                 format="YYYY/MM/DD"
                 value-format="YYYY-MM-DD"
                 :disabled-date="disabledDate"
+                :clearable="false"
               />
             </template>
           </el-table-column>
