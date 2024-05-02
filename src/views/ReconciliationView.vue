@@ -110,7 +110,7 @@
                   :disabled-date="disabledDate"
                   :clearable="false"
                 />
-                <el-button @click="handlePostingDateChange(scope.row)">修改</el-button>
+                <el-button @click="handleSystemFlowChange(scope.row)">確認</el-button>
               </div>
             </template>
           </el-table-column>
@@ -424,7 +424,8 @@ export default {
         this.totalSystemFlow += item.depositAmount
       })
     },
-    handlePostingDateChange(row) {
+    handleSystemFlowChange(row) {
+      alert('修改成功')
       console.log(row)
     },
     // 數字千分位格式
@@ -463,6 +464,9 @@ export default {
     openDetailDialog(scope) {
       console.log(scope.row)
       this.dialogTableVisible = true
+      this.getDetail()
+    },
+    getDetail() {
       this.systemFlowDetails = [
         {
           outDate: '2024-01-01',
