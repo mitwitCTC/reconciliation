@@ -140,7 +140,7 @@
           />
           <el-table-column align="center" prop="transactionCode" label="交易代號" width="100" />
           <el-table-column align="center" prop="department" label="部門" width="100" />
-          <el-table-column align="center" label="明細" width="180">
+          <el-table-column align="center" label="明細" width="120" fixed="right">
             <template v-slot="scope">
               <el-button @click="openDetailDialog(scope)">查看明細</el-button>
             </template>
