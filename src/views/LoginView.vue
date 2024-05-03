@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <h1 class="my-3 text-center">對帳系統</h1>
-    <form>
+    <form class="login-form">
       <div class="mb-3">
         <label for="account" class="form-label">請輸入帳號</label>
         <input type="text" class="form-control" id="account" v-model="account" />
@@ -37,5 +37,11 @@ export default {
 </script>
 
 <style>
-
+.login-form{
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 20px;
+  padding: 30px;
+}
 </style>
