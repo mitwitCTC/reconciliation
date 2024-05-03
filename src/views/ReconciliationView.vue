@@ -12,6 +12,7 @@
           format="YYYY/MM/DD"
           value-format="YYYY-MM-DD"
           :disabled-date="disabledDate"
+          :clearable="false"
         />
       </div>
 
@@ -107,8 +108,9 @@
                   format="YYYY/MM/DD"
                   value-format="YYYY-MM-DD"
                   :disabled-date="disabledDate"
+                  :clearable="false"
                 />
-                <el-button @click="handlePostingDateChange(scope.row)">修改</el-button>
+                <el-button @click="handleSystemFlowChange(scope.row)">確認</el-button>
               </div>
             </template>
           </el-table-column>
@@ -138,7 +140,7 @@
           />
           <el-table-column align="center" prop="transactionCode" label="交易代號" width="100" />
           <el-table-column align="center" prop="department" label="部門" width="100" />
-          <el-table-column align="center" label="明細" width="180">
+          <el-table-column align="center" label="明細" width="120" fixed="right">
             <template v-slot="scope">
               <el-button @click="openDetailDialog(scope)">查看明細</el-button>
             </template>
@@ -163,6 +165,7 @@
                 format="YYYY/MM/DD"
                 value-format="YYYY-MM-DD"
                 :disabled-date="disabledDate"
+                :clearable="false"
               />
             </template>
           </el-table-column>
@@ -421,7 +424,8 @@ export default {
         this.totalSystemFlow += item.depositAmount
       })
     },
-    handlePostingDateChange(row) {
+    handleSystemFlowChange(row) {
+      alert('修改成功')
       console.log(row)
     },
     // 數字千分位格式
@@ -460,6 +464,9 @@ export default {
     openDetailDialog(scope) {
       console.log(scope.row)
       this.dialogTableVisible = true
+      this.getDetail()
+    },
+    getDetail() {
       this.systemFlowDetails = [
         {
           outDate: '2024-01-01',
