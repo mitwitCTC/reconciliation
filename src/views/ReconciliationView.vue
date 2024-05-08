@@ -146,7 +146,67 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-button type="success" class="mt-4" style="width: 100%" @click="openSystemDiolog()">
+          新增系統帳資料
+        </el-button>
       </div>
+      <el-dialog
+        v-model="dialogSystemVisible"
+        title="新增系統帳資料"
+        center
+        :fullscreen="true"
+        title-class="dialog-title"
+      >
+        <el-form
+          style="max-width: 500px; text-align: center; margin: 0 auto"
+          label-width="120px"
+          label-position="right"
+          ref="addSystemForm"
+          :model="addSystemData"
+          :rules="systemFormRules"
+        >
+          <el-form-item label="入帳日" label-position="right" prop="postingDate">
+            <el-date-picker
+              v-model="addSystemData.postingDate"
+              type="date"
+              placeholder="請選擇入帳日"
+              format="YYYY/MM/DD"
+              value-format="YYYY-MM-DD"
+              :disabled-date="disabledDate"
+              :clearable="false"
+            />
+          </el-form-item>
+          <el-form-item label="場站名稱" label-position="right" prop="station">
+            <el-input
+              v-model="addSystemData.station"
+              placeholder="請輸入場站名稱"
+              type="text"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="入帳金額" label-position="right" prop="depositAmount">
+            <el-input
+              v-model="addSystemData.depositAmount"
+              placeholder="請輸入入帳金額"
+              type="number"
+              min="1"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="部門" label-position="right" prop="department">
+            <el-input
+              v-model="addSystemData.department"
+              placeholder="請輸入部門"
+              type="text"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="success" @click="addSystem">確認</el-button>
+            <el-button @click="cancelAddSystem">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
       <el-dialog
         v-model="dialogTableVisible"
         :close-on-click-modal="false"
@@ -227,6 +287,19 @@ export default {
       systemFlow: [],
       countSystemFlow: null,
       totalSystemFlow: null,
+      dialogSystemVisible: false,
+      addSystemData: {
+        postingDate: '',
+        depositAmount: null,
+        station: '',
+        department: ''
+      },
+      systemFormRules: {
+        postingDate: [{ required: true, message: '請選擇入帳日', trigger: 'change' }],
+        station: [{ required: true, message: '請輸入場站名稱', trigger: 'blur' }],
+        depositAmount: [{ required: true, message: '請輸入入帳金額', trigger: 'blur' }],
+        department: [{ required: true, message: '請輸入部門名稱', trigger: 'blur' }]
+      },
       dialogTableVisible: false,
       systemFlowDetails: [],
       dialogVisible: false,
@@ -428,6 +501,26 @@ export default {
       alert('修改成功')
       console.log(row)
     },
+    openSystemDiolog() {
+      this.dialogSystemVisible = true
+      if (this.searchData.postingDate !== '') {
+        this.addSystemData.postingDate = this.searchData.date
+      }
+    },
+    addSystem() {
+      this.$refs.addSystemForm.validate((valid) => {
+        if (valid) {
+          alert('新增成功')
+          console.log('新增系統帳資料', this.addSystemData)
+          this.addSystemData = {}
+          this.dialogSystemVisible = false
+        }
+      })
+    },
+    cancelAddSystem() {
+      this.addSystemData = {}
+      this.dialogSystemVisible = false
+    },
     // 數字千分位格式
     amountFormatter(row, column, cellValue) {
       cellValue += ''
@@ -558,5 +651,9 @@ el-table {
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
+}
+
+.el-dialog__title {
+  --el-dialog-title-font-size: 28px;
 }
 </style>
