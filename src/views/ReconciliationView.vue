@@ -207,6 +207,7 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <!-- 交易明細 dialog -->
       <el-dialog
         v-model="dialogTableVisible"
         :close-on-click-modal="false"
@@ -252,8 +253,45 @@
               <el-button @click="handleDetailAmountChange(scope.row)">確認調整</el-button>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="刪除">
+            <template v-slot="scope">
+              <el-button type="danger" @click="openDeleteDetailDialog(scope.row)">刪除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
+        <!-- 刪除交易明細 dialog -->
+        <el-dialog
+          v-model="deleteDetailDialogVisible"
+          :close-on-click-modal="false"
+          title="刪除交易明細"
+          width="500"
+          center
+          align-center
+        >
+          <div class="d-flex flex-column">
+            <div class="row mb-2 justify-content-center">
+              <div class="col-3 text-end">入帳日期：</div>
+              <div class="col-4 text-start fw-bold">{{ deleteDetailData.outDate }}</div>
+            </div>
+            <div class="row mb-2 justify-content-center">
+              <div class="col-3 text-end">交易時間：</div>
+              <div class="col-4 text-start fw-bold">{{ deleteDetailData.transactionTime }}</div>
+            </div>
+            <div class="row mb-2 justify-content-center">
+              <div class="col-3 text-end">交易金額：</div>
+              <div class="col-4 text-start fw-bold">{{ deleteDetailData.amount }}</div>
+            </div>
+          </div>
+          <template #footer>
+            <div class="dialog-footer">
+              <el-button @click="deleteDetailDialogVisible = false">取消</el-button>
+              <el-button type="danger" @click="deleteDetail">確認刪除</el-button>
+            </div>
+          </template>
+        </el-dialog>
+        <!-- 刪除交易明細 dialog -->
       </el-dialog>
+      <!-- 交易明細 dialog -->
     </div>
   </div>
 </template>
@@ -303,8 +341,9 @@ export default {
       dialogTableVisible: false,
       systemFlowDetails: [],
       dialogVisible: false,
-      selectedId: null,
-      stations: [],
+      checkDetail: null,
+      deleteDetailDialogVisible: false,
+      deleteDetailData: null,
       transferData: []
     }
   },
@@ -514,6 +553,7 @@ export default {
           console.log('新增系統帳資料', this.addSystemData)
           this.addSystemData = {}
           this.dialogSystemVisible = false
+          this.getDetail()
         }
       })
     },
@@ -557,9 +597,11 @@ export default {
     openDetailDialog(scope) {
       console.log(scope.row)
       this.dialogTableVisible = true
+      this.checkDetail = scope.row
       this.getDetail()
     },
     getDetail() {
+      console.log('查看', this.checkDetail)
       this.systemFlowDetails = [
         {
           outDate: '2024-01-01',
@@ -615,6 +657,16 @@ export default {
       } else {
         alert('修改欄位不得為空！')
       }
+    },
+    openDeleteDetailDialog(scope) {
+      this.deleteDetailDialogVisible = true
+      this.deleteDetailData = scope
+    },
+    deleteDetail() {
+      alert('刪除明細成功～')
+      this.getDetail()
+      console.log('刪除了這一筆明細', this.deleteDetailData)
+      this.deleteDetailDialogVisible = false
     },
     transfer() {
       this.transferData = this.bankFlow.filter((e) => e.station != '')
