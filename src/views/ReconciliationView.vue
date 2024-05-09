@@ -150,6 +150,7 @@
           新增系統帳資料
         </el-button>
       </div>
+      <!-- 新增系統帳 dialog -->
       <el-dialog
         v-model="dialogSystemVisible"
         title="新增系統帳資料"
@@ -165,9 +166,28 @@
           :model="addSystemData"
           :rules="systemFormRules"
         >
-          <el-form-item label="入帳日" label-position="right" prop="postingDate">
+          <el-form-item label="付款交易代號" label-position="right" prop="trx_seq">
+            <el-input
+              v-model="addSystemData.trx_seq"
+              placeholder="請輸入付款交易代號"
+              type="text"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="交易日" label-position="right" prop="trx_date">
             <el-date-picker
-              v-model="addSystemData.postingDate"
+              v-model="addSystemData.trx_date"
+              type="date"
+              placeholder="請選擇交易日"
+              format="YYYY/MM/DD"
+              value-format="YYYY-MM-DD"
+              :disabled-date="disabledDate"
+              :clearable="false"
+            />
+          </el-form-item>
+          <el-form-item label="入帳日" label-position="right" prop="scheduled_date">
+            <el-date-picker
+              v-model="addSystemData.scheduled_date"
               type="date"
               placeholder="請選擇入帳日"
               format="YYYY/MM/DD"
@@ -184,9 +204,27 @@
               autocomplete="off"
             />
           </el-form-item>
-          <el-form-item label="入帳金額" label-position="right" prop="depositAmount">
+          <el-form-item label="交易金額" label-position="right" prop="trade_amount">
             <el-input
-              v-model="addSystemData.depositAmount"
+              v-model="addSystemData.trade_amount"
+              placeholder="請輸入交易金額"
+              type="number"
+              min="1"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="手續費" label-position="right" prop="tn_amount">
+            <el-input
+              v-model="addSystemData.tn_amount"
+              placeholder="請輸入手續費"
+              type="number"
+              min="1"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="入帳金額" label-position="right" prop="s_amount">
+            <el-input
+              v-model="addSystemData.s_amount"
               placeholder="請輸入入帳金額"
               type="number"
               min="1"
@@ -207,6 +245,7 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <!-- 新增系統帳 dialog -->
       <!-- 交易明細 dialog -->
       <el-dialog
         v-model="dialogTableVisible"
@@ -259,6 +298,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-button type="success" class="mt-2" @click="openSystemDiolog()">新增交易明細</el-button>
         <!-- 刪除交易明細 dialog -->
         <el-dialog
           v-model="deleteDetailDialogVisible"
@@ -327,15 +367,19 @@ export default {
       totalSystemFlow: null,
       dialogSystemVisible: false,
       addSystemData: {
-        postingDate: '',
-        depositAmount: null,
-        station: '',
-        department: ''
+        trx_seq: '', // 付款交易代號
+        trx_date: '', // 交易日
+        scheduled_date: '', // 入帳日
+        station: '', // 場站名稱
+        trade_amount: '', // 交易金額
+        tn_amount: '', // 手續費
+        s_amount: '', // 實付金額 (入帳金額)
+        department: '' // 部門
       },
       systemFormRules: {
-        postingDate: [{ required: true, message: '請選擇入帳日', trigger: 'change' }],
+        scheduled_date: [{ required: true, message: '請選擇入帳日', trigger: 'change' }],
         station: [{ required: true, message: '請輸入場站名稱', trigger: 'blur' }],
-        depositAmount: [{ required: true, message: '請輸入入帳金額', trigger: 'blur' }],
+        s_amount: [{ required: true, message: '請輸入入帳金額', trigger: 'blur' }],
         department: [{ required: true, message: '請輸入部門名稱', trigger: 'blur' }]
       },
       dialogTableVisible: false,
@@ -553,6 +597,7 @@ export default {
           console.log('新增系統帳資料', this.addSystemData)
           this.addSystemData = {}
           this.dialogSystemVisible = false
+          this.getSystemFlow()
           this.getDetail()
         }
       })
