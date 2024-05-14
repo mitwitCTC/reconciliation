@@ -162,14 +162,67 @@
           style="max-width: 500px; text-align: center; margin: 0 auto"
           label-width="120px"
           label-position="right"
+          ref="searchCashFlowDataForm"
+          :model="searchCashFlowData"
+          :rules="searchCashFlowDataRules"
+        >
+          <el-form-item label="銀行帳號" prop="bankId">
+            <el-select
+              v-model="searchCashFlowData.bankId"
+              placeholder="請選擇銀行帳號"
+              size="large"
+              @select="getSearchCashFlowData"
+            >
+              <el-option
+                v-for="item in searchInfo.bank"
+                :key="item.id"
+                :label="item.bankCode + item.account"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="場站" prop="parkId">
+            <el-select
+              v-model="searchCashFlowData.parkId"
+              placeholder="請先選擇銀行帳號"
+              size="large"
+            >
+              <el-option
+                v-for="item in carParkOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="金流來源" prop="cashflowClassId">
+            <el-select
+              v-model="searchCashFlowData.cashflowClassId"
+              placeholder="請先選擇銀行帳號"
+              size="large"
+              @select="searchCashFlow"
+            >
+              <el-option
+                v-for="item in cashflowClassOptions"
+                :key="item.id"
+                :label="item.casedescribe"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <el-form
+          style="max-width: 500px; text-align: center; margin: 0 auto"
+          label-width="120px"
+          label-position="right"
           ref="addSystemForm"
           :model="addSystemData"
           :rules="systemFormRules"
         >
-          <el-form-item label="付款交易代號" label-position="right" prop="trx_seq">
+          <el-form-item label="支付交易代號" label-position="right" prop="trx_seq">
             <el-input
               v-model="addSystemData.trx_seq"
-              placeholder="請輸入付款交易代號"
+              placeholder="請輸入支付交易代號"
               type="text"
               autocomplete="off"
             />
@@ -196,14 +249,6 @@
               :clearable="false"
             />
           </el-form-item>
-          <el-form-item label="場站名稱" label-position="right" prop="station">
-            <el-input
-              v-model="addSystemData.station"
-              placeholder="請輸入場站名稱"
-              type="text"
-              autocomplete="off"
-            />
-          </el-form-item>
           <el-form-item label="交易金額" label-position="right" prop="trade_amount">
             <el-input
               v-model="addSystemData.trade_amount"
@@ -228,14 +273,6 @@
               placeholder="請輸入入帳金額"
               type="number"
               min="1"
-              autocomplete="off"
-            />
-          </el-form-item>
-          <el-form-item label="部門" label-position="right" prop="department">
-            <el-input
-              v-model="addSystemData.department"
-              placeholder="請輸入部門"
-              type="text"
               autocomplete="off"
             />
           </el-form-item>
@@ -366,21 +403,38 @@ export default {
       countSystemFlow: null,
       totalSystemFlow: null,
       dialogSystemVisible: false,
+      searchInfo: {
+        bank: [],
+        park: [],
+        cashflowClass: []
+      },
+      carParkOptions: [],
+      cashflowClassOptions: [],
+      searchCashFlowData: {
+        bankId: '',
+        parkId: '',
+        cashflowClassId: ''
+      },
       addSystemData: {
-        trx_seq: '', // 付款交易代號
+        trx_seq: '', // 支付交易代號
         trx_date: '', // 交易日
         scheduled_date: '', // 入帳日
-        station: '', // 場站名稱
         trade_amount: '', // 交易金額
         tn_amount: '', // 手續費
         s_amount: '', // 實付金額 (入帳金額)
-        department: '' // 部門
+        cashFlowId: ''
+      },
+      searchCashFlowDataRules: {
+        bankId: [{ required: true, message: '請選擇銀行', trigger: 'change' }],
+        parkId: [{ required: true, message: '請選擇場站', trigger: 'change' }],
+        cashflowClassId: [{ required: true, message: '請選擇金流分類', trigger: 'change' }]
       },
       systemFormRules: {
-        scheduled_date: [{ required: true, message: '請選擇入帳日', trigger: 'change' }],
-        station: [{ required: true, message: '請輸入場站名稱', trigger: 'blur' }],
-        s_amount: [{ required: true, message: '請輸入入帳金額', trigger: 'blur' }],
-        department: [{ required: true, message: '請輸入部門名稱', trigger: 'blur' }]
+        trx_date: [{ required: true, message: '請選擇交易日', trigger: 'blur' }],
+        scheduled_date: [{ required: true, message: '請選擇入帳日', trigger: 'blur' }],
+        trade_amount: [{ required: true, message: '請輸入交易金額', trigger: 'blur' }],
+        tn_amount: [{ required: true, message: '請輸入手續費金額', trigger: 'blur' }],
+        s_amount: [{ required: true, message: '請輸入實際入帳金額', trigger: 'blur' }]
       },
       dialogTableVisible: false,
       systemFlowDetails: [],
@@ -586,25 +640,273 @@ export default {
     },
     openSystemDiolog() {
       this.dialogSystemVisible = true
-      if (this.searchData.postingDate !== '') {
-        this.addSystemData.postingDate = this.searchData.date
+      if (this.searchData.date !== '') {
+        this.addSystemData.scheduled_date = this.searchData.date
+      }
+      this.getSearchInfo()
+    },
+    // 取得銀行、場站、金流所有列表
+    getSearchInfo() {
+      this.searchInfo = {
+        bank: [
+          {
+            id: 1,
+            name: '力揚彰銀臨停',
+            bankCode: '009',
+            account: '41150119912400',
+            companyId: 1,
+            voucherNum: '1112.21',
+            isConnection: '0',
+            message: null
+          },
+          {
+            id: 2,
+            name: '汎揚彰銀臨停',
+            bankCode: '009',
+            account: '41150128015700',
+            companyId: 2,
+            voucherNum: '1112.26',
+            isConnection: '0',
+            message: null
+          },
+          {
+            id: 3,
+            name: '花果山玉山臨停',
+            bankCode: '',
+            account: '',
+            companyId: 3,
+            voucherNum: null,
+            isConnection: '0',
+            message: null
+          }
+        ],
+        carPark: [
+          {
+            id: 1,
+            name: '信義國中',
+            companyId: 1,
+            voucherDep: '00013021',
+            userId: null
+          },
+          {
+            id: 2,
+            name: '重陽',
+            companyId: 1,
+            voucherDep: '00018010',
+            userId: null
+          },
+          {
+            id: 3,
+            name: '板橋第一',
+            companyId: 1,
+            voucherDep: '00015008',
+            userId: null
+          },
+          {
+            id: 95,
+            name: '龜山龍華',
+            companyId: 2,
+            voucherDep: '00011052',
+            userId: null
+          },
+          {
+            id: 96,
+            name: '創新二期',
+            companyId: 2,
+            voucherDep: '00011053',
+            userId: null
+          },
+          {
+            id: 97,
+            name: '龜山建國一村',
+            companyId: 2,
+            voucherDep: '00011051',
+            userId: null
+          },
+          {
+            id: 101,
+            name: '中壢天晟',
+            companyId: 3,
+            voucherDep: '00015024',
+            userId: null
+          },
+          {
+            id: 102,
+            name: '楊梅天成',
+            companyId: 3,
+            voucherDep: '00015005',
+            userId: null
+          },
+          {
+            id: 103,
+            name: '金色年代(延平)',
+            companyId: 3,
+            voucherDep: '00015031',
+            userId: null
+          },
+          {
+            id: 107,
+            name: '力揚-龍潭分館停車場',
+            companyId: 1,
+            voucherDep: '00012035',
+            userId: null
+          },
+          {
+            id: 108,
+            name: '力揚-埔心車站後站機車停車場',
+            companyId: 1,
+            voucherDep: '00018006',
+            userId: null
+          }
+        ],
+        cashflowClass: [
+          {
+            id: 1,
+            casedescribe: 'linepayMoney',
+            companyId: 1,
+            connectionId: 4,
+            terms: '',
+            bankMemo: 'iPASS MONEY',
+            voucherNum: '1123.60',
+            voucherDesc: '一卡通',
+            message: null
+          },
+          {
+            id: 2,
+            casedescribe: 'linepay',
+            companyId: 1,
+            connectionId: 7,
+            terms: '',
+            bankMemo: '國泰世華商連加',
+            voucherNum: '1123.60',
+            voucherDesc: '連加',
+            message: null
+          },
+          {
+            id: 3,
+            casedescribe: '悠遊卡A',
+            companyId: 1,
+            connectionId: 0,
+            terms: '',
+            bankMemo: '悠遊卡公司',
+            voucherNum: '1123.30',
+            voucherDesc: '悠遊卡',
+            message: '悠遊卡舊系統'
+          },
+          {
+            id: 4,
+            casedescribe: '悠遊卡B',
+            companyId: 1,
+            connectionId: 1,
+            terms: '',
+            bankMemo: '悠遊卡公司',
+            voucherNum: '1123.30',
+            voucherDesc: '悠遊卡',
+            message: '悠遊卡新系統'
+          },
+          {
+            id: 5,
+            casedescribe: 'linepayMoney',
+            companyId: 2,
+            connectionId: 5,
+            terms: '',
+            bankMemo: 'iPASS MONEY',
+            voucherNum: '1123.60',
+            voucherDesc: '一卡通',
+            message: null
+          },
+          {
+            id: 6,
+            casedescribe: 'linepay',
+            companyId: 2,
+            connectionId: 8,
+            terms: '',
+            bankMemo: '國泰世華商連加',
+            voucherNum: '1123.60',
+            voucherDesc: '連加',
+            message: null
+          },
+          {
+            id: 9,
+            casedescribe: 'linepayMoney',
+            companyId: 3,
+            connectionId: 6,
+            terms: '',
+            bankMemo: 'iPASS MONEY',
+            voucherNum: '1123.60',
+            voucherDesc: '一卡通',
+            message: null
+          },
+          {
+            id: 10,
+            casedescribe: 'linepay',
+            companyId: 3,
+            connectionId: 9,
+            terms: '',
+            bankMemo: '國泰世華商連加',
+            voucherNum: '1123.60',
+            voucherDesc: '連加',
+            message: null
+          }
+        ]
       }
     },
-    addSystem() {
-      this.$refs.addSystemForm.validate((valid) => {
+    // 根據選擇的 bank 的 companyId 來篩選 carPark、cashflowClass
+    getSearchCashFlowData() {
+      const selectedBank = this.searchInfo.bank.find(
+        (item) => item.id === this.searchCashFlowData.bankId
+      )
+
+      if (!selectedBank) {
+        return
+      }
+
+      const companyId = selectedBank.companyId
+
+      this.carParkOptions = this.searchInfo.carPark.filter((item) => item.companyId === companyId)
+
+      this.cashflowClassOptions = this.searchInfo.cashflowClass.filter(
+        (item) => item.companyId === companyId
+      )
+
+      // 重置 parkId 和 cashflowClassId
+      this.searchCashFlowData.parkId = null
+      this.searchCashFlowData.cashflowClassId = null
+    },
+    // 查詢金流的代號
+    searchCashFlow() {
+      this.$refs.searchCashFlowDataForm.validate((valid) => {
         if (valid) {
-          alert('新增成功')
-          console.log('新增系統帳資料', this.addSystemData)
-          this.addSystemData = {}
-          this.dialogSystemVisible = false
-          this.getSystemFlow()
-          this.getDetail()
+          console.log('查詢金流的代號', this.searchCashFlowData)
+        }
+      })
+    },
+    addSystem() {
+      this.$refs.searchCashFlowDataForm.validate((valid) => {
+        if (valid) {
+          this.$refs.addSystemForm.validate((valid) => {
+            this.searchCashFlow()
+            if (valid) {
+              alert('新增成功')
+              console.log('新增系統帳資料', this.addSystemData)
+              this.addSystemData = {}
+              this.searchCashFlowData = {}
+              this.dialogSystemVisible = false
+              this.compare()
+              if (this.dialogTableVisible) {
+                this.getDetail()
+              }
+            }
+          })
         }
       })
     },
     cancelAddSystem() {
       this.addSystemData = {}
+      this.searchCashFlowData = {}
       this.dialogSystemVisible = false
+      this.$refs.addSystemForm.clearValidate()
+      this.$refs.searchCashFlowDataForm.clearValidate()
     },
     // 數字千分位格式
     amountFormatter(row, column, cellValue) {
@@ -726,6 +1028,13 @@ export default {
   },
   mounted() {
     this.getSearchOrigin()
+  },
+  watch: {
+    'searchCashFlowData.bankId'(newValue, oldValue) {
+      if (newValue !== null && newValue !== oldValue) {
+        this.getSearchCashFlowData()
+      }
+    }
   }
 }
 </script>
