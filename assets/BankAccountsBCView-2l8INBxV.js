@@ -1,1 +1,0 @@
-import{_ as o,r as t,c as n,b as r,o as c}from"./index-PniCT5Hr.js";const s={data(){return{}}},a={class:"container"};function _(i,p,d,u,f,l){const e=t("router-view");return c(),n("div",a,[r(e)])}const v=o(s,[["render",_]]);export{v as default};

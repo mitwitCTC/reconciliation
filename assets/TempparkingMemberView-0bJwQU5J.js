@@ -1,1 +1,0 @@
-import{_ as s,c as o,a as e,t as n,o as a}from"./index-PniCT5Hr.js";const r={data(){return{text:"臨停 > 臨停會員"}}},c={class:"container"},p=e("p",null,"頁面建置中...",-1);function _(i,l,d,u,t,f){return a(),o("div",c,[e("p",null,n(t.text),1),p])}const x=s(r,[["render",_]]);export{x as default};

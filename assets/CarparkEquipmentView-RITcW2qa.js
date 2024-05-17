@@ -1,0 +1,1 @@
+import{_ as a,c as n,a as t,t as o,o as r}from"./index-HRt4mq2L.js";const s={data(){return{text:"基本資料 > 設備管理 > 場站設備管理"}}},c=t("p",null,"頁面建置中...",-1);function p(l,_,i,u,e,d){return r(),n("div",null,[t("p",null,o(e.text),1),c])}const m=a(s,[["render",p]]);export{m as default};
