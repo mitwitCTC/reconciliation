@@ -1,1 +1,0 @@
-import{_ as s,c as n,a as t,t as o,o as a}from"./index-KL21Rz6l.js";const r={data(){return{text:"基本資料 > 設備管理 > 設備項目"}}},c=t("p",null,"頁面建置中...",-1);function p(l,_,i,u,e,d){return a(),n("div",null,[t("p",null,o(e.text),1),c])}const m=s(r,[["render",p]]);export{m as default};

@@ -1,0 +1,1 @@
+import{_ as o,c as s,a as t,t as n,o as c}from"./index-PniCT5Hr.js";const a={data(){return{text:"臨停 > 停車場帳務AB > 轉應收帳"}}},r={class:"container"},i=t("p",null,"頁面建置中...",-1);function _(l,p,d,u,e,f){return c(),s("div",r,[t("p",null,n(e.text),1),i])}const B=o(a,[["render",_]]);export{B as default};
