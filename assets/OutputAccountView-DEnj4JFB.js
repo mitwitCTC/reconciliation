@@ -1,0 +1,1 @@
+import{_ as o,c as n,a as t,t as s,o as c}from"./index-KL21Rz6l.js";const a={data(){return{text:"其他帳務 > 銷項"}}},r=t("p",null,"頁面建置中...",-1);function p(l,u,_,i,e,d){return c(),n("div",null,[t("p",null,s(e.text),1),r])}const x=o(a,[["render",p]]);export{x as default};

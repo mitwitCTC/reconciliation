@@ -1,0 +1,1 @@
+import{_ as s,c as o,a as t,t as a,o as n}from"./index-KL21Rz6l.js";const r={data(){return{text:"基本資料 > 場站基本資料"}}},c={class:"container"},_=t("p",null,"頁面建置中...",-1);function p(i,l,d,u,e,f){return n(),o("div",c,[t("p",null,a(e.text),1),_])}const m=s(r,[["render",p]]);export{m as default};

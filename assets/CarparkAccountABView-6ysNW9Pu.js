@@ -1,0 +1,1 @@
+import{_ as o,r as t,c as r,b as c,o as n}from"./index-KL21Rz6l.js";const s={data(){return{}}},a={class:"container"};function _(p,i,d,u,f,l){const e=t("router-view");return n(),r("div",a,[c(e)])}const v=o(s,[["render",_]]);export{v as default};
