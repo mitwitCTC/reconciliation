@@ -9,9 +9,15 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <NavTabs></NavTabs>
-    <RouterView />
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-3">
+        <NavTabs />
+      </div>
+      <div class="col-9">
+        <RouterView />
+      </div>
+    </div>
   </div>
 </template>
 

@@ -8,6 +8,7 @@ import router from './router'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js';
+import 'default-passive-events';
 
 import ElementPlus from 'element-plus';
 import "element-plus/dist/index.css";

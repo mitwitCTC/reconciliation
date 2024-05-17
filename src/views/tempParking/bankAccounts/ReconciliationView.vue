@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <h1 class="my-3 text-center">對帳系統</h1>
+  <div>
+    <h1 class="mb-3 text-center">對帳系統</h1>
     <form class="row align-items-center">
       <div class="col-md-3">
         <el-date-picker

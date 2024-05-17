@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
+import BasicView from '@/views/basicInfo/BasicView.vue'
+import TempparkingView from '@/views/tempParking/TempparkingView.vue'
+import OtherAccountsView from '@/views/OtherAccounts/OtherAccountsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +11,8 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: { title: '登入' }
     },
     {
       path: '/',
@@ -16,28 +20,210 @@ const router = createRouter({
       component: HomeView,
       children: [
         {
-          path: '/reconciliation',
-          component: () => import('@/views/ReconciliationView.vue')
+          path: '/basic',
+          name: '基本資料',
+          component: BasicView,
+          children: [
+            {
+              path: '/basic/companies',
+              name: '公司基本資料',
+              component: () => import('@/views/basicInfo/CompaniesView.vue'),
+              meta: { title: '公司基本資料' }
+            },
+            {
+              path: '/basic/carparks',
+              name: '場站基本資料',
+              component: () => import('@/views/basicInfo/CarparksView.vue'),
+              meta: { title: '場站基本資料' }
+            },
+            {
+              path: '/basic/equipments',
+              name: '設備管理',
+              component: () => import('@/views/basicInfo/EquipmentsView.vue'),
+              meta: { title: '設備管理' },
+              children: [
+                {
+                  path: '/basic/equipments/equipment-items',
+                  name: '設備項目',
+                  component: () => import('@/views/Equipments/EquipmentItemsView.vue')
+                },
+                {
+                  path: '/basic/equipments/equipment-carpark',
+                  name: '場站設備管理',
+                  component: () => import('@/views/Equipments/CarparkEquipmentView.vue')
+                }
+              ]
+            },
+            {
+              path: '/basic/cashflow',
+              name: '金流',
+              component: () => import('@/views/basicInfo/CashflowView.vue'),
+              meta: { title: '金流' },
+              children: [
+                {
+                  path: '/basic/cashflow/bank-management',
+                  name: '銀行管理',
+                  component: () => import('@/views/Cashflow/BankManagementView.vue'),
+                  meta: { title: '銀行管理' }
+                },
+                {
+                  path: '/basic/cashflow/cashflow-class',
+                  name: '金流種類',
+                  component: () => import('@/views/Cashflow/CashflowClassView.vue'),
+                  meta: { title: '金流種類' }
+                },
+                {
+                  path: '/basic/cashflow/cashflow-management',
+                  name: '金流管理',
+                  component: () => import('@/views/Cashflow/CashflowManagementView.vue'),
+                  meta: { title: '金流管理' }
+                },
+                {
+                  path: '/basic/cashflow/carpark-account',
+                  name: '場帳對應',
+                  component: () => import('@/views/Cashflow/CarparkAccountView.vue'),
+                  meta: { title: '場帳對應' }
+                }
+              ]
+            },
+            {
+              path: '/basic/accounting-account',
+              name: '會計科目',
+              component: () => import('@/views/basicInfo/AccountingAccountView.vue'),
+              meta: { title: '會計科目' }
+            }
+          ]
         },
         {
-          path: '/monthlyRental',
-          component: () => import('@/views/MonthlyrentalView.vue')
+          path: '/temporaryparking',
+          name: '臨停',
+          component: TempparkingView,
+          children: [
+            {
+              path: '/temporaryparking/tempparking-member',
+              name: '臨停會員',
+              component: () => import('@/views/tempParking/TempparkingMemberView.vue'),
+              meta: { title: '臨停會員' }
+            },
+            // {
+            //   path: '/temporaryparking/carpark-accounts',
+            //   name: '停車場帳務AB',
+            //   component: () =>
+            //     import('@/views/tempParking/CarparkAccountAB/CarparkAccountABView.vue'),
+            //   meta: { title: '停車場帳務AB' },
+            //   children: [
+            //     {
+            //       path: '/temporaryparking/carpark-accounts/reconciliationAB',
+            //       name: '轉應收帳',
+            //       component: () =>
+            //         import('@/views/tempParking/CarparkAccountAB/ReconciliationABView.vue'),
+            //       meta: { title: '轉應收帳' }
+            //     },
+            //     {
+            //       path: '/temporaryparking/carpark-accounts/transfer-statusAB',
+            //       name: '傳輸狀態',
+            //       component: () =>
+            //         import('@/views/tempParking/CarparkAccountAB/TransferStatusABView.vue'),
+            //       meta: { title: '傳輸狀態' }
+            //     },
+            //     {
+            //       path: '/temporaryparking/carpark-accounts/work-logAB',
+            //       name: '工作日誌',
+            //       component: () =>
+            //         import('@/views/tempParking/CarparkAccountAB/WorkLogsABView.vue'),
+            //       meta: { title: '工作日誌' }
+            //     },
+            //     {
+            //       path: '/temporaryparking/carpark-accounts/subpoena-recordAB',
+            //       name: '傳票紀錄',
+            //       component: () =>
+            //         import('@/views/tempParking/CarparkAccountAB/SubpoenaRecordABView.vue'),
+            //       meta: { title: '傳票紀錄' }
+            //     }
+            //   ]
+            // },
+            {
+              path: '/temporaryparking/bank-accounts',
+              name: '銀行帳務BC',
+              component: () => import('@/views/tempParking/bankAccounts/BankAccountsBCView.vue'),
+              meta: { title: '銀行帳務BC' },
+              children: [
+                {
+                  path: '/temporaryparking/bank-accounts/reconciliation',
+                  name: '轉應收帳',
+                  component: () =>
+                    import('@/views/tempParking/bankAccounts/ReconciliationView.vue'),
+                  meta: { title: '轉應收帳' }
+                },
+                {
+                  path: '/temporaryparking/bank-accounts/transfer-status',
+                  name: '傳輸狀態',
+                  component: () =>
+                    import('@/views/tempParking/bankAccounts/TransferStatusView.vue'),
+                  meta: { title: '傳輸狀態' }
+                },
+                {
+                  path: '/temporaryparking/bank-accounts/cash-in-transit',
+                  name: '轉在途現金',
+                  component: () => import('@/views/tempParking/bankAccounts/CashInTransitView.vue'),
+                  meta: { title: '轉在途現金' }
+                },
+                {
+                  path: '/temporaryparking/bank-accounts/work-log',
+                  name: '工作日誌',
+                  component: () => import('@/views/tempParking/bankAccounts/WorkLogsView.vue'),
+                  meta: { title: '工作日誌' }
+                },
+                {
+                  path: '/temporaryparking/bank-accounts/subpoena-record',
+                  name: '傳票紀錄',
+                  component: () =>
+                    import('@/views/tempParking/bankAccounts/SubpoenaRecordView.vue'),
+                  meta: { title: '傳票紀錄' }
+                }
+              ]
+            },
+            {
+              path: '/temporaryparking/financial-statements',
+              name: '報表',
+              component: () => import('@/views/tempParking/FinancialStatementsView.vue'),
+              meta: { title: '報表' }
+            }
+          ]
         },
         {
-          path: '/user',
-          component: () => import('@/views/UserView.vue')
-        },
+          path: '/otheraccounts',
+          name: '其他帳務',
+          component: OtherAccountsView,
+          children: [
+            {
+              path: '/otheraccounts/input-account',
+              name: '進項',
+              component: () => import('@/views/OtherAccounts/InputAccountView.vue'),
+              meta: { title: '進項' }
+            },
+            {
+              path: '/otheraccounts/output-account',
+              name: '銷項',
+              component: () => import('@/views/OtherAccounts/OutputAccountView.vue'),
+              meta: { title: '銷項' }
+            }
+          ]
+        }
       ]
-    },
+    }
   ]
 })
 
 router.beforeEach((to) => {
-  const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+  const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true'
   if (to.name !== 'login' && !isAuthenticated) {
     return { name: 'login' }
   } else if (to.name == 'login' && isAuthenticated) {
     router.push('/reconciliation')
+  }
+  if (to.meta.title) {
+    document.title = to.meta.title
   }
 })
 

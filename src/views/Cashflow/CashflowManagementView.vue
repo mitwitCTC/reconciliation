@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <p>{{ text }}</p>
         <p>頁面建置中...</p>
     </div>  
@@ -9,7 +9,7 @@
 export default {
     data(){
         return {
-            text: "使用者管理"
+            text: "基本資料 > 金流 > 金流管理"
         }
     },
 }
