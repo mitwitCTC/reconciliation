@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import { API } from '@/App.vue'
+
 export default {
   data() {
     return {
@@ -125,35 +127,10 @@ export default {
       this.pageTitle = this.$route.name
     },
     getCompanyData() {
-      this.companies = [
-        {
-          id: 1,
-          name: '力揚',
-          taxNumber: null,
-          receiptTitle: null,
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
-        },
-        {
-          id: 2,
-          name: '汎揚',
-          taxNumber: null,
-          receiptTitle: null,
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
-        },
-        {
-          id: 3,
-          name: '花果山',
-          taxNumber: null,
-          receiptTitle: null,
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
-        }
-      ]
+      const getCompanyDataApi = `${API}/main/searchCompanyInfo`
+      this.axios.get(getCompanyDataApi).then((response) => {
+        this.companies = response.data.data
+      })
     },
     openCompanyDialog(company) {
       if (company) {
@@ -177,9 +154,21 @@ export default {
       this.$refs.eidtCompanyForm.validate((valid) => {
         if (valid) {
           if (this.isEditing) {
-            console.log('修改成功', this.currentCompany)
+            const editCompanyApi = `${API}/main/updateCompanyInfo`
+            this.axios.post(editCompanyApi, this.currentCompany).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getCompanyData()
+              }
+            })
           } else {
-            console.log('新增成功', this.currentCompany)
+            const insertCompanyApi = `${API}/main/insertCompanyInfo`
+            this.axios.post(insertCompanyApi, this.currentCompany).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getCompanyData()
+              }
+            })
           }
           this.dialogVisible = false
         }
@@ -192,11 +181,16 @@ export default {
     openDeleteCompanyDialog(scope) {
       this.deleteCompanyDialogVisible = true
       this.deleteCompanyData = scope
-      console.log('刪除公司資料', this.deleteCompanyData)
     },
     deleteCompany() {
-      console.log('成功刪除公司資料', this.deleteCompanyData.id)
-      this.deleteCompanyDialogVisible = false
+      const deleteCompanyApi = `${API}/main/deleteCompanyInfo`
+      this.axios.post(deleteCompanyApi, { id: this.deleteCompanyData.id }).then((response) => {
+        if (response.data.returnCode == 0) {
+          alert(response.data.message)
+          this.getCompanyData()
+          this.deleteCompanyDialogVisible = false
+        }
+      })
     }
   }
 }
