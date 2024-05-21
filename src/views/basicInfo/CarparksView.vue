@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import { API } from '@/App.vue'
+
 export default {
   data() {
     return {
@@ -126,87 +128,27 @@ export default {
   mounted() {
     this.getPageTitle()
     this.getCarParkData()
-    this.getCompanies()
+    this.getCompanyData()
   },
   methods: {
     getPageTitle() {
       this.pageTitle = this.$route.name
     },
     getCarParkData() {
-      this.carParks = [
-        {
-          id: 1,
-          name: '信義國中',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00013021',
-          userId: null,
-          deleteTime: ''
-        },
-        {
-          id: 2,
-          name: '重陽',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00018010',
-          userId: null,
-          deleteTime: ''
-        },
-        {
-          id: 3,
-          name: '板橋第一',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00015008',
-          userId: null,
-          deleteTime: ''
-        },
-        {
-          id: 4,
-          name: '南崁公一',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00013006',
-          userId: null,
-          deleteTime: ''
+      const getCarParkDataApi = `${API}/main/searchCarPark`
+      this.axios.get(getCarParkDataApi).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.carParks = response.data.data
         }
-      ]
-      console.log('取場站資料')
+      })
     },
-    getCompanies() {
-      this.companies = [
-        {
-          id: 1,
-          name: '力揚',
-          taxNumber: '11111111',
-          receiptTitle: '力揚公司',
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
-        },
-        {
-          id: 2,
-          name: '汎揚',
-          taxNumber: '22222222',
-          receiptTitle: '汎揚公司',
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
-        },
-        {
-          id: 3,
-          name: '花果山',
-          taxNumber: null,
-          receiptTitle: null,
-          monthlyBank: null,
-          accountNumber: null,
-          deleteTime: '0'
+    getCompanyData() {
+      const getCompanyDataApi = `${API}/main/searchCompanyInfo`
+      this.axios.get(getCompanyDataApi).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.companies = response.data.data
         }
-      ]
+      })
     },
     handleCompanyChange(value) {
       // 找到選擇的公司
@@ -227,7 +169,6 @@ export default {
         )
         this.currentCarPark.taxNumber = selectedCompany.taxNumber
         this.currentCarPark.receiptTitle = selectedCompany.receiptTitle
-        console.log('要編輯的場站', this.currentCarPark)
       } else {
         // 新增模式
         this.isEditing = false
@@ -243,11 +184,21 @@ export default {
       this.$refs.eidtCarParkForm.validate((valid) => {
         if (valid) {
           if (this.isEditing) {
-            console.log('編輯場站', this.currentCarPark)
-            this.getCarParkData()
+            const editCarParkApi = `${API}/main/updateCarPark`
+            this.axios.post(editCarParkApi, this.currentCarPark).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getCarParkData()
+              }
+            })
           } else {
-            console.log('新增場站', this.currentCarPark)
-            this.getCarParkData()
+            const insertCarParkApi = `${API}/main/insertCarPark`
+            this.axios.post(insertCarParkApi, this.currentCarPark).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getCarParkData()
+              }
+            })
           }
           this.dialogVisible = false
         }
@@ -262,9 +213,14 @@ export default {
       this.deleteCarParkData = scope
     },
     deleteCarPark() {
-      this.getCarParkData()
-      this.deleteCarParkDialogVisible = false
-      console.log("刪除場站",this.deleteCarParkData.id)
+      const deleteCarParkApi = `${API}/main/deleteCarPark`
+      this.axios.post(deleteCarParkApi, { id: this.deleteCarParkData.id }).then((response) => {
+        if (response.data.returnCode == 0) {
+          alert(response.data.message)
+          this.getCarParkData()
+          this.deleteCarParkDialogVisible = false
+        }
+      })
     }
   }
 }
