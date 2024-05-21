@@ -46,7 +46,7 @@
           <el-input v-model="currentCompany.accountNumber"></el-input>
         </el-form-item>
       </el-form>
-      <div class="dialog-footer">
+      <div class="dialog-footer d-flex justify-content-end">
         <el-button @click="cancelSaveCompany">取消</el-button>
         <el-button type="primary" @click="saveCompany">確定</el-button>
       </div>
