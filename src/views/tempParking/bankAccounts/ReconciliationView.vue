@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1 class="mb-3 text-center">對帳系統</h1>
-    <form class="row align-items-center">
-      <div class="col-md-3">
+    <form class="row align-items-end">
+      <div class="col-lg-3 col-md-12">
         <el-date-picker
           class="align-self-stretch"
           style="width: 100%"
@@ -16,14 +16,23 @@
         />
       </div>
 
-      <div class="col-md-3">
-        <el-select v-model="searchData.cashFlowSource" placeholder="請選擇金流來源">
+      <div class="col-lg-2 col-md-12">
+        <el-select v-model="searchData.bankMemo" placeholder="金流來源">
+          <el-option disabled value="null">金流來源</el-option>
           <el-option v-for="item in cashFlowSources" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
 
-      <div class="col-md-3">
-        <el-select v-model="searchData.bankAccount" placeholder="請選擇銀行來源">
+      <div class="col-lg-2 col-md-12">
+        <el-select v-model="searchData.bankCode" placeholder="銀行代碼">
+          <el-option disabled value="null">銀行代碼</el-option>
+          <el-option v-for="item in bankCodeSources" :key="item" :label="item" :value="item" />
+        </el-select>
+      </div>
+
+      <div class="col-lg-3 col-md-12">
+        <el-select v-model="searchData.account" placeholder="銀行來源">
+          <el-option disabled value="null">銀行來源</el-option>
           <el-option
             v-for="item in bankAccounts"
             :key="item.account"
@@ -33,9 +42,9 @@
         </el-select>
       </div>
 
-      <div class="col-md-2 mobile-btns">
-        <button class="btn btn-success" @click.prevent="show">顯示</button>
-        <button class="btn btn-outline-success" @click.prevent="transfer">轉傳票</button>
+      <div class="col-lg-2 col-md-12 mobile-btns">
+        <button class="btn btn-sm btn-success" @click.prevent="show">顯示</button>
+        <button class="btn btn-sm btn-outline-success" @click.prevent="transfer">轉傳票</button>
       </div>
     </form>
 
@@ -57,23 +66,24 @@
             }}</strong></span
           >
         </p>
+
         <el-table
           :data="bankFlow"
           :row-style="{ height: '50px' }"
           :row-class-name="customRowClassName"
           height="450"
         >
-          <el-table-column align="center" prop="station" label="場站名稱" width="180" />
-          <el-table-column align="center" prop="postingDate" label="入帳日" width="180" />
+          <el-table-column align="center" prop="parkName" label="場站名稱" width="180" />
+          <el-table-column align="center" prop="accountDate" label="入帳日" width="180" />
           <el-table-column
             align="center"
-            prop="depositAmount"
+            prop="amount"
             sortable
             :formatter="amountFormatter"
             label="入帳金額"
             width="110"
           />
-          <el-table-column align="center" prop="note" label="註記" width="180" />
+          <el-table-column align="center" prop="bankmark" label="備註" width="180" />
         </el-table>
       </div>
       <div class="col-md-6">
@@ -95,14 +105,14 @@
           :row-class-name="customSystemRowClassName"
           height="450"
         >
-          <el-table-column align="center" prop="station" label="場站名稱" width="180" />
-          <el-table-column align="center" prop="postingDate" label="入帳日" width="210">
+          <el-table-column align="center" prop="parkName" label="場站名稱" width="180" />
+          <el-table-column align="center" prop="adjust_date" label="入帳日" width="210">
             <template v-slot="scope">
               <div class="d-flex justify-content-between">
                 <el-date-picker
                   class="align-self-stretch"
                   style="width: 100%"
-                  v-model="scope.row.postingDate"
+                  v-model="scope.row.adjust_date"
                   type="date"
                   placeholder="請選擇入帳日期"
                   format="YYYY/MM/DD"
@@ -116,7 +126,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="depositAmount"
+            prop="s_amount"
             sortable
             :formatter="amountFormatter"
             label="入帳金額"
@@ -124,7 +134,7 @@
           />
           <el-table-column
             align="center"
-            prop="transactionAmount"
+            prop="trade_amount"
             sortable
             :formatter="amountFormatter"
             label="交易金額"
@@ -132,7 +142,7 @@
           />
           <el-table-column
             align="center"
-            prop="fee"
+            prop="tn_amount"
             sortable
             :formatter="amountFormatter"
             label="手續費"
@@ -376,7 +386,7 @@
 <script>
 import { ElLoading } from 'element-plus'
 
-// import { API } from '../App.vue'
+import { API } from '@/App.vue'
 
 export default {
   data() {
@@ -386,13 +396,15 @@ export default {
       },
       searchData: {
         date: '',
-        cashFlowSource: '',
-        bankAccount: ''
+        bankMemo: '',
+        account: ''
       },
       // 搜尋條件來源
       searchOrigin: [],
       // 金流來源 cashFlowSources bankMemo欄位
       cashFlowSources: [],
+      // 銀行代號來源 bankCode
+      bankCodeSources: [],
       //   銀行來源 bankAccounts
       bankAccounts: [],
       isComparing: false,
@@ -446,192 +458,73 @@ export default {
     }
   },
   methods: {
+    showLoading(text = '載入中...') {
+      return ElLoading.service({
+        lock: true,
+        text: text,
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+    },
     getSearchOrigin() {
-      this.searchOrigin = [
-        {
-          id: 1,
-          companyId: 1,
-          bankMemo: 'iPASS MONEY',
-          voucherDesc: '一卡通',
-          message: null,
-          bankId: 1,
-          name: '力揚彰銀臨停',
-          bankCode: '009',
-          account: '41150119912400'
-        },
-        {
-          id: 2,
-          companyId: 1,
-          bankMemo: '國泰世華商連加',
-          voucherDesc: '連加',
-          message: null,
-          bankId: 1,
-          name: '力揚彰銀臨停一',
-          bankCode: '009',
-          account: '41150119912401'
-        },
-        {
-          id: 3,
-          companyId: 1,
-          bankMemo: '悠遊卡公司',
-          voucherDesc: '悠遊卡',
-          message: '悠遊卡舊系統',
-          bankId: 1,
-          name: '力揚彰銀臨停',
-          bankCode: '009',
-          account: '41150119912406'
+      const getSearchOriginApi = `${API}/main/querycCondition`
+      this.axios.get(getSearchOriginApi).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.searchOrigin = response.data.data
+          this.getCashFlowSources()
+          this.getBankAccountSources()
         }
-      ]
-      this.getCashFlowSources()
-      this.getBankAccountSources()
+      })
     },
     // 金流來源選項
     getCashFlowSources() {
-      this.cashFlowSources = this.searchOrigin.map((item) => {
-        return item.bankMemo.trim()
-      })
+      this.cashFlowSources = [...new Set(this.searchOrigin.map((item) => item.bankMemo))]
     },
     // 銀行來源選項
     getBankAccountSources() {
-      this.bankAccounts = this.searchOrigin.map((item) => {
-        return {
-          name: item.name.trim(),
-          account: `${item.bankCode}${item.account}`
+      this.bankCodeSources = [...new Set(this.searchOrigin.map((item) => item.bankCode))]
+      const uniqueBankAccounts = {}
+      this.bankAccounts = this.searchOrigin.reduce((acc, item) => {
+        const account = item.account
+        const name = item.name.trim()
+        const key = `${name}-${account}`
+        if (!uniqueBankAccounts[key]) {
+          uniqueBankAccounts[key] = true
+          acc.push({ name, account })
         }
-      })
+        return acc
+      }, [])
+      this.searchData.bankCode = this.bankCodeSources[0]
     },
     show() {
       if (
         this.searchData.date !== '' &&
-        this.searchData.cashFlowSource !== '' &&
-        this.searchData.bankAccount !== ''
+        this.searchData.bankMemo !== '' &&
+        this.searchData.bankCode !== '' &&
+        this.searchData.account !== ''
       ) {
-        const loading = ElLoading.service({
-          lock: true,
-          text: '比對中...',
-          background: 'rgba(0, 0, 0, 0.7)'
-        })
-        setTimeout(() => {
-          loading.close()
-          this.countBankFlow = null
-          this.totalBankFlow = null
-          this.countSystemFlow = null
-          this.totalSystemFlow = null
-          this.compare()
-        }, 2000)
+        this.compare()
       } else {
         alert('搜尋欄位不得為空！')
       }
     },
-    getBankFlow() {
-      this.bankFlow = [
-        {
-          id: 1,
-          station: '',
-          postingDate: '2024-01-01',
-          depositAmount: 1000,
-          note: '這是備註訊息'
-        },
-        {
-          id: 2,
-          station: '',
-          postingDate: '2024-01-01',
-          depositAmount: 1300,
-          note: ''
-        },
-        {
-          id: 3,
-          station: '',
-          postingDate: '2024-01-01',
-          depositAmount: 1200,
-          note: '這是備註訊息'
-        },
-        {
-          id: 4,
-          station: '',
-          postingDate: '2024-01-01',
-          depositAmount: 900,
-          note: ''
-        },
-        {
-          id: 5,
-          station: '',
-          postingDate: '2024-01-01',
-          depositAmount: 500,
-          note: ''
+    async getBankFlow() {
+      const getBankFlowApi = `${API}/main/bankStatement`
+      return this.axios.post(getBankFlowApi, this.searchData).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.bankFlow = response.data.data.transaction
+          this.countBankFlow = response.data.data.totalCount
+          this.totalBankFlow = response.data.data.totalAmount
         }
-      ]
-      this.countBankFlow = this.bankFlow.length
-      this.bankFlow.forEach((item) => {
-        this.totalBankFlow += item.depositAmount
       })
     },
-    getSystemFlow() {
-      // const getSystemFlowAPI = `${API}/main/tradeSum`
-      // console.log(getSystemFlowAPI)
-      this.systemFlow = [
-        {
-          id: 64,
-          postingDate: '2024-01-01',
-          transactionAmount: 515,
-          fee: 15,
-          depositAmount: 500,
-          transactionCode: 'y11111111',
-          station: '富岡停一停車場',
-          department: '部門一'
-        },
-        {
-          id: 98,
-          postingDate: '2024-01-01',
-          transactionAmount: 915,
-          fee: 15,
-          depositAmount: 900,
-          transactionCode: 'y22222222',
-          station: '南崁廣停一',
-          department: '部門二'
-        },
-        {
-          id: 119,
-          postingDate: '2024-01-01',
-          transactionAmount: 1315,
-          fee: 15,
-          depositAmount: 1300,
-          transactionCode: 'y33333333',
-          station: '瑞芳消防分隊營業所',
-          department: '部門一'
-        },
-        {
-          id: 191,
-          postingDate: '2024-01-01',
-          transactionAmount: 515,
-          fee: 15,
-          depositAmount: 500,
-          transactionCode: 'y44444444',
-          station: '桃園停三',
-          department: '部門一'
-        },
-        {
-          id: 199,
-          postingDate: '2024-01-01',
-          transactionAmount: 515,
-          fee: 15,
-          depositAmount: 500,
-          transactionCode: 'y55555555',
-          station: '桃園停一',
-          department: '部門二'
+    async getSystemFlow() {
+      const getSystemFlowAPI = `${API}/main/systemStatement`
+      return this.axios.post(getSystemFlowAPI, this.searchData).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.systemFlow = response.data.data.paymentTrade
+          this.countSystemFlow = response.data.data.totalCount
+          this.totalSystemFlow = response.data.data.totalAmount
         }
-      ]
-      // this.axios
-      //   .post(getSystemFlowAPI, {
-      //     consumeType: this.searchData.consumeType,
-      //     date: this.searchData.date
-      //   })
-      //   .then((response) => {
-      //     console.log('這是系統帳哦～', response)
-      //   })
-      this.countSystemFlow = this.systemFlow.length
-      this.systemFlow.forEach((item) => {
-        this.totalSystemFlow += item.depositAmount
       })
     },
     handleSystemFlowChange(row) {
@@ -919,25 +812,35 @@ export default {
         .replace(/\.$/, '')
     },
     compare() {
-      this.getBankFlow()
-      this.getSystemFlow()
-      this.bankFlow.forEach((bankItem) => {
-        const matchingSystemFlow = this.systemFlow.find(
-          (systemItem) => systemItem.depositAmount === bankItem.depositAmount
-        )
+      const loading = this.showLoading('比對中...')
+      Promise.all([this.getBankFlow(), this.getSystemFlow()])
+        .then(() => {
+          loading.close()
+          const matchedAmounts = new Set()
 
-        if (matchingSystemFlow) {
-          bankItem.station = matchingSystemFlow.station
-        }
-      })
-      console.log('比對完啦', this.bankFlow)
+          this.bankFlow.forEach((bankItem) => {
+            const matchingSystemFlow = this.systemFlow.find(
+              (systemItem) =>
+                !matchedAmounts.has(systemItem.s_amount) &&
+                systemItem.s_amount === parseInt(bankItem.amount)
+            )
+            if (matchingSystemFlow) {
+              bankItem.parkName = matchingSystemFlow.parkName
+              bankItem.parkId = matchingSystemFlow.parkId
+              matchedAmounts.add(matchingSystemFlow.s_amount)
+            }
+          })
+        })
+        .catch((error) => {
+          console.error('error', error)
+        })
     },
     customRowClassName({ row }) {
-      return row.station !== '' ? 'bg-success text-white' : ''
+      return row.parkId !== null ? 'bg-success text-white' : ''
     },
     customSystemRowClassName({ row }) {
       const isMatched = this.bankFlow.some(
-        (item) => item.station === row.station && item.postingDate === row.postingDate
+        (item) => item.parkName === row.parkName && item.adjust_date === row.accountDate
       )
       return isMatched ? 'bg-success text-white' : ''
     },
@@ -1016,11 +919,12 @@ export default {
       this.deleteDetailDialogVisible = false
     },
     transfer() {
-      this.transferData = this.bankFlow.filter((e) => e.station != '')
+      this.transferData = this.bankFlow.filter((e) => e.parkId != null)
       if (this.transferData.length > 0) {
-        this.bankFlow = this.bankFlow.filter((e) => e.station == '')
+        this.bankFlow = this.bankFlow.filter((e) => e.parkId == null)
         alert('完成轉傳票')
         console.log('轉傳票', this.transferData)
+        this.compare()
       } else {
         alert('無可以轉傳票的資料！')
       }
