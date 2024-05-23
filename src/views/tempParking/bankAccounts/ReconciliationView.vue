@@ -61,12 +61,9 @@
           &nbsp;筆
           <span>
             &nbsp;/&nbsp;總金額&nbsp;$
-            <strong>{{
-              totalBankFlow.toLocaleString('en', { minimumFractionDigits: 0 })
-            }}</strong></span
-          >
+            <strong>{{ totalBankFlow.toLocaleString('en', { minimumFractionDigits: 0 }) }}</strong>
+          </span>
         </p>
-
         <el-table
           :data="bankFlow"
           :row-style="{ height: '50px' }"
@@ -94,10 +91,16 @@
           &nbsp;筆
           <span>
             &nbsp;/&nbsp;總金額&nbsp;$
-            <strong>{{
-              totalSystemFlow.toLocaleString('en', { minimumFractionDigits: 0 })
-            }}</strong></span
-          >
+            <strong>
+              {{ totalSystemFlow.toLocaleString('en', { minimumFractionDigits: 0 }) }}
+            </strong>
+          </span>
+          <span>
+            &nbsp;帳差&nbsp;$
+            <strong :class="dynamicDiscrepancyClass">
+              {{ discrepancy ? discrepancy.toLocaleString('en', { minimumFractionDigits: 0 }) : 0 }}
+            </strong>
+          </span>
         </p>
         <el-table
           :data="systemFlow"
@@ -414,6 +417,7 @@ export default {
       systemFlow: [],
       countSystemFlow: null,
       totalSystemFlow: null,
+      discrepancy: null,
       dialogSystemVisible: false,
       searchInfo: {
         bank: [],
@@ -815,6 +819,7 @@ export default {
       const loading = this.showLoading('比對中...')
       Promise.all([this.getBankFlow(), this.getSystemFlow()])
         .then(() => {
+          this.discrepancy = this.totalSystemFlow - this.totalBankFlow
           loading.close()
           const matchedAmounts = new Set()
 
@@ -938,6 +943,12 @@ export default {
       if (newValue !== null && newValue !== oldValue) {
         this.getSearchCashFlowData()
       }
+    }
+  },
+  computed: {
+    // 帳差文字顏色
+    dynamicDiscrepancyClass() {
+      return this.discrepancy < 0 ? 'text-danger' : 'text-success'
     }
   }
 }
