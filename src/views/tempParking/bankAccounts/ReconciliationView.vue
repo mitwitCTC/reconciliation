@@ -518,6 +518,10 @@ export default {
           this.bankFlow = response.data.data.transaction
           this.countBankFlow = response.data.data.totalCount
           this.totalBankFlow = response.data.data.totalAmount
+          this.bankFlow = response.data.data.transaction.map((item) => ({
+            ...item,
+            amount: Number(item.amount) // 將字串轉換為數值
+          }))
         }
       })
     },
