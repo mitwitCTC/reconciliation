@@ -168,7 +168,6 @@
         v-model="dialogSystemVisible"
         title="新增系統帳資料"
         center
-        :fullscreen="true"
         title-class="dialog-title"
       >
         <el-form
@@ -184,7 +183,7 @@
               v-model="searchCashFlowData.bankId"
               placeholder="請選擇銀行帳號"
               size="large"
-              @select="getSearchCashFlowData"
+              @change="getSearchCashFlowData"
             >
               <el-option
                 v-for="item in searchInfo.bank"
@@ -213,7 +212,7 @@
               v-model="searchCashFlowData.cashflowClassId"
               placeholder="請先選擇銀行帳號"
               size="large"
-              @select="searchCashFlow"
+              @change="searchCashFlowId"
             >
               <el-option
                 v-for="item in cashflowClassOptions"
@@ -549,209 +548,12 @@ export default {
     },
     // 取得銀行、場站、金流所有列表
     getSearchInfo() {
-      this.searchInfo = {
-        bank: [
-          {
-            id: 1,
-            name: '力揚彰銀臨停',
-            bankCode: '009',
-            account: '41150119912400',
-            companyId: 1,
-            voucherNum: '1112.21',
-            isConnection: '0',
-            message: null
-          },
-          {
-            id: 2,
-            name: '汎揚彰銀臨停',
-            bankCode: '009',
-            account: '41150128015700',
-            companyId: 2,
-            voucherNum: '1112.26',
-            isConnection: '0',
-            message: null
-          },
-          {
-            id: 3,
-            name: '花果山玉山臨停',
-            bankCode: '',
-            account: '',
-            companyId: 3,
-            voucherNum: null,
-            isConnection: '0',
-            message: null
-          }
-        ],
-        carPark: [
-          {
-            id: 1,
-            name: '信義國中',
-            companyId: 1,
-            voucherDep: '00013021',
-            userId: null
-          },
-          {
-            id: 2,
-            name: '重陽',
-            companyId: 1,
-            voucherDep: '00018010',
-            userId: null
-          },
-          {
-            id: 3,
-            name: '板橋第一',
-            companyId: 1,
-            voucherDep: '00015008',
-            userId: null
-          },
-          {
-            id: 95,
-            name: '龜山龍華',
-            companyId: 2,
-            voucherDep: '00011052',
-            userId: null
-          },
-          {
-            id: 96,
-            name: '創新二期',
-            companyId: 2,
-            voucherDep: '00011053',
-            userId: null
-          },
-          {
-            id: 97,
-            name: '龜山建國一村',
-            companyId: 2,
-            voucherDep: '00011051',
-            userId: null
-          },
-          {
-            id: 101,
-            name: '中壢天晟',
-            companyId: 3,
-            voucherDep: '00015024',
-            userId: null
-          },
-          {
-            id: 102,
-            name: '楊梅天成',
-            companyId: 3,
-            voucherDep: '00015005',
-            userId: null
-          },
-          {
-            id: 103,
-            name: '金色年代(延平)',
-            companyId: 3,
-            voucherDep: '00015031',
-            userId: null
-          },
-          {
-            id: 107,
-            name: '力揚-龍潭分館停車場',
-            companyId: 1,
-            voucherDep: '00012035',
-            userId: null
-          },
-          {
-            id: 108,
-            name: '力揚-埔心車站後站機車停車場',
-            companyId: 1,
-            voucherDep: '00018006',
-            userId: null
-          }
-        ],
-        cashflowClass: [
-          {
-            id: 1,
-            casedescribe: 'linepayMoney',
-            companyId: 1,
-            connectionId: 4,
-            terms: '',
-            bankMemo: 'iPASS MONEY',
-            voucherNum: '1123.60',
-            voucherDesc: '一卡通',
-            message: null
-          },
-          {
-            id: 2,
-            casedescribe: 'linepay',
-            companyId: 1,
-            connectionId: 7,
-            terms: '',
-            bankMemo: '國泰世華商連加',
-            voucherNum: '1123.60',
-            voucherDesc: '連加',
-            message: null
-          },
-          {
-            id: 3,
-            casedescribe: '悠遊卡A',
-            companyId: 1,
-            connectionId: 0,
-            terms: '',
-            bankMemo: '悠遊卡公司',
-            voucherNum: '1123.30',
-            voucherDesc: '悠遊卡',
-            message: '悠遊卡舊系統'
-          },
-          {
-            id: 4,
-            casedescribe: '悠遊卡B',
-            companyId: 1,
-            connectionId: 1,
-            terms: '',
-            bankMemo: '悠遊卡公司',
-            voucherNum: '1123.30',
-            voucherDesc: '悠遊卡',
-            message: '悠遊卡新系統'
-          },
-          {
-            id: 5,
-            casedescribe: 'linepayMoney',
-            companyId: 2,
-            connectionId: 5,
-            terms: '',
-            bankMemo: 'iPASS MONEY',
-            voucherNum: '1123.60',
-            voucherDesc: '一卡通',
-            message: null
-          },
-          {
-            id: 6,
-            casedescribe: 'linepay',
-            companyId: 2,
-            connectionId: 8,
-            terms: '',
-            bankMemo: '國泰世華商連加',
-            voucherNum: '1123.60',
-            voucherDesc: '連加',
-            message: null
-          },
-          {
-            id: 9,
-            casedescribe: 'linepayMoney',
-            companyId: 3,
-            connectionId: 6,
-            terms: '',
-            bankMemo: 'iPASS MONEY',
-            voucherNum: '1123.60',
-            voucherDesc: '一卡通',
-            message: null
-          },
-          {
-            id: 10,
-            casedescribe: 'linepay',
-            companyId: 3,
-            connectionId: 9,
-            terms: '',
-            bankMemo: '國泰世華商連加',
-            voucherNum: '1123.60',
-            voucherDesc: '連加',
-            message: null
-          }
-        ]
-      }
+      const getSearchInfoApi = `${API}/main/searchInfo`
+      this.axios.get(getSearchInfoApi).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.searchInfo = response.data.data
+        }
+      })
     },
     // 根據選擇的 bank 的 companyId 來篩選 carPark、cashflowClass
     getSearchCashFlowData() {
@@ -776,30 +578,31 @@ export default {
       this.searchCashFlowData.cashflowClassId = null
     },
     // 查詢金流的代號
-    searchCashFlow() {
+    searchCashFlowId() {
       this.$refs.searchCashFlowDataForm.validate((valid) => {
         if (valid) {
-          console.log('查詢金流的代號', this.searchCashFlowData)
+          const searchCashFlowApi = `${API}/main/searchCashFlowId`
+          this.axios.post(searchCashFlowApi, this.searchCashFlowData).then((response) => {
+            this.addSystemData.cashFlowId = response.data.data[0].id
+          })
         }
       })
     },
     addSystem() {
-      this.$refs.searchCashFlowDataForm.validate((valid) => {
+      this.searchCashFlowId()
+      this.$refs.addSystemForm.validate((valid) => {
         if (valid) {
-          this.$refs.addSystemForm.validate((valid) => {
-            this.searchCashFlow()
-            if (valid) {
-              alert('新增成功')
-              console.log('新增系統帳資料', this.addSystemData)
-              this.addSystemData = {}
-              this.searchCashFlowData = {}
-              this.dialogSystemVisible = false
-              this.compare()
-              if (this.dialogTableVisible) {
-                this.getDetail()
-              }
-            }
-          })
+          alert('新增成功')
+          console.log('新增系統帳資料', this.addSystemData)
+          this.searchCashFlowData = {}
+          this.addSystemData = {}
+          this.$refs.addSystemForm.clearValidate()
+          this.$refs.searchCashFlowDataForm.clearValidate()
+          this.dialogSystemVisible = false
+          this.compare()
+          if (this.dialogTableVisible) {
+            this.getDetail()
+          }
         }
       })
     },
