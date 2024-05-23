@@ -305,43 +305,44 @@
         width="70vw"
       >
         <el-table :data="systemFlowDetails" height="500">
-          <el-table-column align="center" property="outDate" label="入帳日期">
+          <el-table-column align="center" property="outDate" label="入帳日期" width="210">
             <template v-slot="scope">
-              <el-date-picker
-                class="align-self-stretch"
-                v-model="scope.row.outDate"
-                type="date"
-                placeholder="請選擇入帳日期"
-                format="YYYY/MM/DD"
-                value-format="YYYY-MM-DD"
-                :disabled-date="disabledDate"
-                :clearable="false"
-              />
+              <div class="d-flex justify-content-between">
+                <el-date-picker
+                  class="align-self-stretch"
+                  v-model="scope.row.adjust_date"
+                  type="date"
+                  placeholder="請選擇入帳日期"
+                  format="YYYY/MM/DD"
+                  value-format="YYYY-MM-DD"
+                  :disabled-date="disabledDate"
+                  :clearable="false"
+                />
+                <el-button @click="handleDetailAmountChange(scope.row)">確認</el-button>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column align="center" property="transactionTime" label="交易時間" sortable />
           <el-table-column
             align="center"
-            property="amount"
-            label="金額"
+            property="s_amount"
+            label="入帳金額"
             sortable
             :formatter="amountFormatter"
           />
-          <!-- <template v-slot="scope">
-              <el-input
-                v-model="scope.row.amount"
-                @keyup.enter="handleDetailAmountChange(scope.row)"
-                :min="0"
-                :step="5"
-                type="number"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column align="center" label="調整">
-            <template v-slot="scope">
-              <el-button @click="handleDetailAmountChange(scope.row)">確認調整</el-button>
-            </template>
-          </el-table-column>
+          <el-table-column
+            align="center"
+            property="trade_amount"
+            label="交易金額"
+            sortable
+            :formatter="amountFormatter"
+          />
+          <el-table-column
+            align="center"
+            property="tn_amount"
+            label="手續費"
+            sortable
+            :formatter="amountFormatter"
+          />
           <el-table-column align="center" label="刪除">
             <template v-slot="scope">
               <el-button type="danger" @click="openDeleteDetailDialog(scope.row)">刪除</el-button>
@@ -854,60 +855,25 @@ export default {
       return isMatched ? 'bg-success text-white' : ''
     },
     openDetailDialog(scope) {
-      console.log(scope.row)
-      this.dialogTableVisible = true
+      const loading = this.showLoading('載入中...')
       this.checkDetail = scope.row
+      this.searchData.voucherDep = this.checkDetail.voucherDep
       this.getDetail()
+        .then(() => {
+          this.dialogTableVisible = true
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
-    getDetail() {
-      console.log('查看', this.checkDetail)
-      this.systemFlowDetails = [
-        {
-          outDate: '2024-01-01',
-          transactionTime: '12:30:43',
-          amount: 80
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '14:11:34',
-          amount: 120
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '16:51:11',
-          amount: 160
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '18:40:51',
-          amount: 160
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '18:53:20',
-          amount: 80
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '19:11:45',
-          amount: 200
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '19:41:38',
-          amount: 160
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '20:28:54',
-          amount: 40
-        },
-        {
-          outDate: '2024-01-01',
-          transactionTime: '21:53:28',
-          amount: 200
+    async getDetail() {
+      const getsystemFlowDetailsApi = `${API}/main/systemDetail`
+      return this.axios.post(getsystemFlowDetailsApi, this.searchData).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.systemFlowDetails = response.data.data
         }
-      ]
+      })
     },
     handleDetailAmountChange(row) {
       if ((row.outDate !== null) & (row.amount !== '')) {
