@@ -40,8 +40,8 @@
               v-for="company in companies"
               :key="company.id"
               :label="company.name"
-              :value="company.id"
-            ></el-option>
+              :value="company.id">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="場站名稱" prop="name">
@@ -50,8 +50,17 @@
         <el-form-item label="部門代號" prop="voucherDep">
           <el-input v-model="currentCarPark.voucherDep"></el-input>
         </el-form-item>
-        <el-form-item label="使用者代號" prop="userId">
-          <el-input v-model="currentCarPark.userId"></el-input>
+        <el-form-item label="使用者" prop="userId">
+          <el-select 
+            v-model="currentCarPark.userId" 
+            placeholder="請選擇使用者">
+            <el-option 
+              v-for="user in users"
+              :key="user.id"
+              :label="user.userName"
+              :value="user.id">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div class="dialog-footer d-flex justify-content-end">
@@ -99,6 +108,7 @@ export default {
     return {
       pageTitle: '',
       carParks: [],
+      users: [],
       dialogVisible: false,
       currentCarPark: {
         name: '',
@@ -129,6 +139,7 @@ export default {
     this.getPageTitle()
     this.getCarParkData()
     this.getCompanyData()
+    this.getUsers()
   },
   methods: {
     getPageTitle() {
@@ -157,6 +168,14 @@ export default {
       this.currentCarPark.companyId = selectedCompany.id
       this.currentCarPark.taxNumber = selectedCompany.taxNumber
       this.currentCarPark.receiptTitle = selectedCompany.receiptTitle
+    },
+    getUsers() {
+      const getUsersAPI = `${API}/user/searchUser`
+      this.axios
+        .get(getUsersAPI)
+        .then((response) => {
+          this.users = response.data.data
+        })
     },
     openCarParkDialog(CarPark) {
       if (CarPark) {
