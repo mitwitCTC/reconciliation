@@ -551,14 +551,21 @@ export default {
     },
     // 修改系統帳入帳日
     handleSystemFlowChange(row) {
-      alert('修改成功')
       this.modifySystemData.date = this.searchData.date
       this.modifySystemData.adjust_date = row.adjust_date
       this.modifySystemData.bankCode = this.searchData.bankCode
       this.modifySystemData.account = this.searchData.account
       this.modifySystemData.bankMemo = this.searchData.bankMemo
       this.modifySystemData.voucherDep = row.voucherDep
-      console.log(this.modifySystemData);
+      const systemFlowChangeApi = `${API}/main/updateDate`
+      this.axios
+      .post(systemFlowChangeApi, this.modifySystemData)
+      .then((response) => {
+        if (response.data.data.id.length > 0) {
+          alert('修改成功')
+          this.getSystemFlow()
+        }
+      })
     },
     openSystemDiolog() {
       this.dialogSystemVisible = true
@@ -613,17 +620,23 @@ export default {
       this.searchCashFlowId()
       this.$refs.addSystemForm.validate((valid) => {
         if (valid) {
-          alert('新增成功')
-          console.log('新增系統帳資料', this.addSystemData)
-          this.searchCashFlowData = {}
-          this.addSystemData = {}
-          this.$refs.addSystemForm.clearValidate()
-          this.$refs.searchCashFlowDataForm.clearValidate()
-          this.dialogSystemVisible = false
-          this.compare()
-          if (this.dialogTableVisible) {
-            this.getDetail()
-          }
+          const addSystemApi = `${API}/main/manuallyInsert`
+          this.axios
+          .post(addSystemApi, this.addSystemData)
+          .then((response) => {
+            if (response.data.return == 0) {
+              alert('新增成功')
+              this.searchCashFlowData = {}
+              this.addSystemData = {}
+              this.$refs.addSystemForm.clearValidate()
+              this.$refs.searchCashFlowDataForm.clearValidate()
+              this.dialogSystemVisible = false
+              this.compare()
+              if (this.dialogTableVisible) {
+                this.getDetail()
+              }
+            }
+          })
         }
       })
     },
@@ -704,8 +717,16 @@ export default {
       if ((row.outDate !== null) & (row.amount !== '')) {
         this.modifySystemDetailData.adjust_date = row.adjust_date
         this.modifySystemDetailData.id = row.id
-        console.log(this.modifySystemDetailData);
-        alert('修改成功')
+        const detailAmountChangeApi = `${API}/main/updateDate`
+        this.axios
+        .post(detailAmountChangeApi, this.modifySystemDetailData)
+        .then((response) => {
+          if (response.data.data.id != "") {
+            alert('修改成功')
+            this.getDetail()
+            this.getSystemFlow()
+          }
+        })
       } else {
         alert('修改欄位不得為空！')
       }
@@ -715,10 +736,21 @@ export default {
       this.deleteDetailData = scope
     },
     deleteDetail() {
-      alert('刪除明細成功～')
-      this.getDetail()
-      console.log('刪除了這一筆明細', this.deleteDetailData.id)
-      this.deleteDetailDialogVisible = false
+      const deleteDetailApi = `${API}/main/deleteDetail`
+      this.axios
+      .post(deleteDetailApi, {id: this.deleteDetailData.id})
+      .then((response) => {
+        if (response.data.returnCode == 0) {
+          alert('刪除明細成功～')
+          this.getDetail()
+          this.getSystemFlow()
+          this.deleteDetailDialogVisible = false
+        }
+        else {
+          alert("刪除失敗！")
+          this.deleteDetailDialogVisible = false
+        }
+      })
     },
     transfer() {
       this.transferData = this.bankFlow.filter((e) => e.parkId != null)
