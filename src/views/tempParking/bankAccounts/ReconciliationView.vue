@@ -300,9 +300,13 @@
         v-model="dialogTableVisible"
         :close-on-click-modal="false"
         align="center"
-        title="交易明細"
         width="70vw"
       >
+        <template #header>
+          <div>
+            交易明細 - {{ checkDetail.parkName }}
+          </div>
+        </template>
         <el-table :data="systemFlowDetails" height="500">
           <el-table-column align="center" property="outDate" label="入帳日期" width="210">
             <template v-slot="scope">
@@ -361,15 +365,11 @@
           <div class="d-flex flex-column">
             <div class="row mb-2 justify-content-center">
               <div class="col-3 text-end">入帳日期：</div>
-              <div class="col-4 text-start fw-bold">{{ deleteDetailData.outDate }}</div>
+              <div class="col-4 text-start fw-bold">{{ deleteDetailData.adjust_date }}</div>
             </div>
             <div class="row mb-2 justify-content-center">
-              <div class="col-3 text-end">交易時間：</div>
-              <div class="col-4 text-start fw-bold">{{ deleteDetailData.transactionTime }}</div>
-            </div>
-            <div class="row mb-2 justify-content-center">
-              <div class="col-3 text-end">交易金額：</div>
-              <div class="col-4 text-start fw-bold">{{ deleteDetailData.amount }}</div>
+              <div class="col-3 text-end">入帳金額：</div>
+              <div class="col-4 text-start fw-bold">{{ deleteDetailData.s_amount }}</div>
             </div>
           </div>
           <template #footer>
@@ -717,7 +717,7 @@ export default {
     deleteDetail() {
       alert('刪除明細成功～')
       this.getDetail()
-      console.log('刪除了這一筆明細', this.deleteDetailData)
+      console.log('刪除了這一筆明細', this.deleteDetailData.id)
       this.deleteDetailDialogVisible = false
     },
     transfer() {
