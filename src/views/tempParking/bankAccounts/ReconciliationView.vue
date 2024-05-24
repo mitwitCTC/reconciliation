@@ -440,6 +440,20 @@ export default {
         s_amount: '', // 實付金額 (入帳金額)
         cashFlowId: ''
       },
+      modifySystemData: {
+        type: 1,
+        adjust_date: '',
+        date: '',
+        bankCode: '',
+        account: '',
+        voucherDep: '',
+        bankMemo: ''
+      },
+      modifySystemDetailData: {
+        type: 2,
+        adjust_date: '',
+        id: ''
+      },
       searchCashFlowDataRules: {
         bankId: [{ required: true, message: '請選擇銀行', trigger: 'change' }],
         parkId: [{ required: true, message: '請選擇場站', trigger: 'change' }],
@@ -535,9 +549,16 @@ export default {
         }
       })
     },
+    // 修改系統帳入帳日
     handleSystemFlowChange(row) {
       alert('修改成功')
-      console.log(row)
+      this.modifySystemData.date = this.searchData.date
+      this.modifySystemData.adjust_date = row.adjust_date
+      this.modifySystemData.bankCode = this.searchData.bankCode
+      this.modifySystemData.account = this.searchData.account
+      this.modifySystemData.bankMemo = this.searchData.bankMemo
+      this.modifySystemData.voucherDep = row.voucherDep
+      console.log(this.modifySystemData);
     },
     openSystemDiolog() {
       this.dialogSystemVisible = true
@@ -678,9 +699,12 @@ export default {
         }
       })
     },
+    // 修改系統帳明細入帳日
     handleDetailAmountChange(row) {
       if ((row.outDate !== null) & (row.amount !== '')) {
-        console.log('交易明細變更', row)
+        this.modifySystemDetailData.adjust_date = row.adjust_date
+        this.modifySystemDetailData.id = row.id
+        console.log(this.modifySystemDetailData);
         alert('修改成功')
       } else {
         alert('修改欄位不得為空！')
