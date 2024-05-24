@@ -37,6 +37,12 @@ const router = createRouter({
               meta: { title: '場站基本資料' }
             },
             {
+              path: '/basic/users',
+              name: '使用者管理',
+              component: () => import('@/views/basicInfo/UsersView.vue'),
+              meta: { title: '使用者管理'}
+            },
+            {
               path: '/basic/equipments',
               name: '設備管理',
               component: () => import('@/views/basicInfo/EquipmentsView.vue'),
