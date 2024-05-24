@@ -119,63 +119,12 @@ export default {
             this.pageTitle = this.$route.name
         },
         searchCashFlow() {
-            this.cashFlow = [
-                {
-                    id: 1,
-                    merchnatId: 'ly000001',
-                    bankId: 1,
-                    parkId: 1,
-                    cashflowClassId: 1,
-                    deleteTime: '0',
-                    bankName: '力揚彰銀臨停',
-                    parkName: '信義國中',
-                    casedescribe: 'linepayMoney'
-                },
-                {
-                    id: 2,
-                    merchnatId: 'ly000001',
-                    bankId: 1,
-                    parkId: 1,
-                    cashflowClassId: 2,
-                    deleteTime: '0',
-                    bankName: '力揚彰銀臨停',
-                    parkName: '信義國中',
-                    casedescribe: 'linepay'
-                },
-                {
-                    id: 3,
-                    merchnatId: '128159',
-                    bankId: 1,
-                    parkId: 1,
-                    cashflowClassId: 3,
-                    deleteTime: '0',
-                    bankName: '力揚彰銀臨停',
-                    parkName: '信義國中',
-                    casedescribe: '悠遊卡A'
-                },
-                {
-                    id: 4,
-                    merchnatId: 'ly000008',
-                    bankId: 1,
-                    parkId: 2,
-                    cashflowClassId: 1,
-                    deleteTime: '0',
-                    bankName: '力揚彰銀臨停',
-                    parkName: '重陽',
-                    casedescribe: 'linepayMoney'
-                },
-                {
-                    id: 5,
-                    merchnatId: 'ly000008',
-                    bankId: 1,
-                    parkId: 2,
-                    cashflowClassId: 2,
-                    deleteTime: '0',
-                    bankName: '力揚彰銀臨停',
-                    parkName: '重陽',
-                    casedescribe: 'linepay'
-                }
-            ]
+            const searchCashFlowApi = `${API}/main/searchCashFlow`
+            this.axios
+                .get(searchCashFlowApi)
+                .then((response) => {
+                    this.cashFlow = response.data.data
+                })
         },
         openCashflowDialog(cashFlow) {
             if (cashFlow) {
@@ -200,7 +149,6 @@ export default {
             this.axios.get(getSearchInfoApi).then((response) => {
                 if (response.data.returnCode == 0) {
                     this.searchInfo = response.data.data
-                    console.log(response);
                 }
             })
         },
@@ -230,11 +178,25 @@ export default {
             this.$refs.eidtCashflowForm.validate((valid) => {
                 if (valid) {
                     if (this.isEditing) {
-                        alert("修改成功")
-                        console.log(this.currentCashFlow);
+                        const eidtCashflowApi = `${API}/main/updateCashFlow`
+                        this.axios
+                            .post(eidtCashflowApi, this.currentCashFlow)
+                            .then((response) => {
+                                if (response.data.returnCode == 0) {
+                                    alert("修改成功")
+                                    this.searchCashFlow()
+                                }
+                            })
                     } else {
-                        alert("新增成功")
-                        console.log(this.currentCashFlow);
+                        const addCashflowApi = `${API}/main/insertCashFlow`
+                        this.axios
+                            .post(addCashflowApi, this.currentCashFlow)
+                            .then((response) => {
+                                if (response.data.returnCode == 0) {
+                                    alert(response.data.message)
+                                    this.searchCashFlow()
+                                }
+                            })
                     }
                     this.dialogVisible = false
                 }
@@ -242,15 +204,23 @@ export default {
         },
         cancelSaveCashflow() {
             this.dialogVisible = false
-            console.log("取消");
+            this.$refs.eidtCashflowForm.clearValidate()
         },
         openDeleteCashFlowDialog(cashFlow) {
             this.deleteDialogVisible = true
             this.deleteCashflowData = { ...cashFlow }
         },
         deleteCahsflow() {
-            this.deleteDialogVisible = false
-            console.log("刪除金流",this.deleteCashflowData.id)
+            const deleteCahsflowApi = `${API}/main/deleteCashFlow`
+            this.axios
+                .post(deleteCahsflowApi, { id: this.deleteCashflowData.id })
+                .then((response) => {
+                    if (response.data.returnCode == 0) {
+                        alert(response.data.message)
+                        this.searchCashFlow()
+                        this.deleteDialogVisible = false
+                    }
+                })
         }
     },
     mounted() {
