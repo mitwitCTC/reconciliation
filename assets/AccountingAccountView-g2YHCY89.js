@@ -1,1 +1,0 @@
-import{_ as o,c,a as t,t as n,o as s}from"./index-AuYq94vE.js";const a={data(){return{text:"基本資料 > 會計科目"}}},r={class:"container"},_=t("p",null,"頁面建置中...",-1);function i(p,l,u,d,e,f){return s(),c("div",r,[t("p",null,n(e.text),1),_])}const m=o(a,[["render",i]]);export{m as default};

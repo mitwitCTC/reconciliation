@@ -1,0 +1,1 @@
+import{_ as s,c as o,a as t,t as n,o as a}from"./index-uJ9wh_J2.js";const c={data(){return{text:"基本資料 > 使用者管理"}}},r={class:"container"},_=t("p",null,"頁面建置中...",-1);function i(p,l,d,u,e,f){return a(),o("div",r,[t("p",null,n(e.text),1),_])}const m=s(c,[["render",i]]);export{m as default};

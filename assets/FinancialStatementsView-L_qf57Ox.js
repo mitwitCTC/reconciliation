@@ -1,1 +1,0 @@
-import{_ as s,c as n,a as t,t as a,o}from"./index-AuYq94vE.js";const c={data(){return{text:"臨停 > 報表"}}},r={class:"container"},i=t("p",null,"頁面建置中...",-1);function _(l,p,d,u,e,f){return o(),n("div",r,[t("p",null,a(e.text),1),i])}const x=s(c,[["render",_]]);export{x as default};
