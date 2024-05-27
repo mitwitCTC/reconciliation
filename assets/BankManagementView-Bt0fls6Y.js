@@ -1,1 +1,0 @@
-import{_ as n,c as a,a as e,t as o,o as s}from"./index-HRt4mq2L.js";const r={data(){return{text:"基本資料 > 金流 > 銀行管理"}}},c=e("p",null,"頁面建置中...",-1);function l(p,_,i,u,t,d){return s(),a("div",null,[e("p",null,o(t.text),1),c])}const m=n(r,[["render",l]]);export{m as default};

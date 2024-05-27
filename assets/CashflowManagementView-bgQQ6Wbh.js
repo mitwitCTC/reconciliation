@@ -1,1 +1,0 @@
-import{_ as a,c as n,a as e,t as o,o as s}from"./index-HRt4mq2L.js";const r={data(){return{text:"基本資料 > 金流 > 金流管理"}}},c=e("p",null,"頁面建置中...",-1);function l(p,_,i,u,t,d){return s(),n("div",null,[e("p",null,o(t.text),1),c])}const m=a(r,[["render",l]]);export{m as default};

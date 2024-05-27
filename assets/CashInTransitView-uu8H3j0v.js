@@ -1,0 +1,1 @@
+import{_ as s,c as n,a as t,t as o,o as a}from"./index-AuYq94vE.js";const c={data(){return{text:"臨停 > 停車場帳務BC > 轉在途現金"}}},r={class:"container"},_=t("p",null,"頁面建置中...",-1);function i(p,l,d,u,e,f){return a(),n("div",r,[t("p",null,o(e.text),1),_])}const h=s(c,[["render",i]]);export{h as default};
