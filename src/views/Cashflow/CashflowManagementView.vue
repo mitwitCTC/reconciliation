@@ -87,6 +87,7 @@
 
 <script>
 import { API } from '@/App.vue'
+import { ElLoading } from 'element-plus'
 
 export default {
     data() {
@@ -115,15 +116,24 @@ export default {
         }
     },
     methods: {
+        showLoading(text = '載入中...') {
+            return ElLoading.service({
+                lock: true,
+                text: text,
+                background: 'rgba(0, 0, 0, 0.7)'
+            })
+        },
         getPageTitle() {
             this.pageTitle = this.$route.name
         },
         searchCashFlow() {
+            const loading = this.showLoading('載入中...')
             const searchCashFlowApi = `${API}/main/searchCashFlow`
             this.axios
                 .get(searchCashFlowApi)
                 .then((response) => {
                     this.cashFlow = response.data.data
+                    loading.close()
                 })
         },
         openCashflowDialog(cashFlow) {
