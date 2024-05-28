@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { API } from '@/App.vue'
+
 export default {
   data() {
     return {
@@ -24,12 +26,26 @@ export default {
     }
   },
   methods: {
-    login() {
+    async login() {
       if (this.account != '' && this.password != '') {
-        sessionStorage.setItem('isAuthenticated', 'true')
-        this.$router.push('/basic/companies')
+        const logindApi = `${API}/user/login`
+        try {
+          const response = await this.axios.post(logindApi, {
+            account: this.account,
+            password: this.password
+          })
+          if (response.data.data.length === 1) {
+            sessionStorage.setItem('isAuthenticated', 'true')
+            this.$router.push('/basic/companies')
+          } else {
+            alert("帳號或密碼錯誤")
+          }
+        } catch (error) {
+          console.error('Error verifying password:', error)
+          return false
+        }
       } else {
-        alert("帳號或密碼不得為空！");
+        alert('帳號或密碼不得為空！')
       }
     }
   }
@@ -37,7 +53,7 @@ export default {
 </script>
 
 <style>
-.login-form{
+.login-form {
   max-width: 500px;
   margin: 0 auto;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
