@@ -131,6 +131,12 @@ export default {
                 // 編輯模式
                 this.currentCashFlow = { ...cashFlow }
                 this.isEditing = true
+                const savedParkId = this.currentCashFlow.parkId
+                const savedCashflowClassId = this.currentCashFlow.cashflowClassId
+                this.getSearchCashFlowData()
+                // 更新carParkOptions 和 cashflowClassOptions 選項後，重新設置 parkId 和 cashflowClassId
+                this.currentCashFlow.parkId = savedParkId
+                this.currentCashFlow.cashflowClassId = savedCashflowClassId
             } else {
                 // 新增模式
                 this.currentCashFlow = {
