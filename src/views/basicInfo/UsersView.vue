@@ -109,32 +109,10 @@ export default {
       this.pageTitle = this.$route.name
     },
     getUsers() {
-      this.users = [
-        {
-          id: 1,
-          userName: '群和',
-          account: 'mitwit',
-          password: 'YmFhOWI5MDUxODZlOTJiYTg4NmY2NGIwMjcwYzM4YmU=',
-          updateTime: '2024-05-21 17:31:14',
-          deleteTime: '0'
-        },
-        {
-          id: 2,
-          userName: '雲研',
-          account: 'ctc',
-          password: 'MzhhOTE2OTE1ZTg0NTYyODQ1Njg0NmNmNjU3MjZlOWQ=',
-          updateTime: '2024-05-21 17:32:13',
-          deleteTime: '0'
-        },
-        {
-          id: 5,
-          userName: '測試',
-          account: 'test',
-          password: 'ODFkYzliZGI1MmQwNGRjMjAwMzZkYmQ4MzEzZWQwNTU=',
-          updateTime: '2024-05-28 13:45:30',
-          deleteTime: '0'
-        }
-      ]
+      const getUsersAPi = `${API}/user/searchUser`
+      this.axios.get(getUsersAPi).then((response) => {
+        this.users = response.data.data
+      })
     },
     openUserDialog(user) {
       if (user) {
@@ -161,7 +139,16 @@ export default {
     addUser() {
       this.$refs.userForm.validate((valid) => {
         if (valid) {
-          console.log('新增', this.currentUser)
+          const addUserApi = `${API}/user/insertUser`
+          this.axios.post(addUserApi, this.currentUser).then((response) => {
+            if (response.data.returnCode == 0) {
+              alert(response.data.message)
+              this.getUsers()
+              this.addDialogVisible = false
+            } else {
+              alert(response.data.message)
+            }
+          })
         }
       })
     },
@@ -189,9 +176,17 @@ export default {
           alert('新密碼和確認密碼不一致')
           return
         }
-        // 提交表單或執行其他操作
-        alert('修改成功')
-        this.editDialogVisible = false
+        const editUserApi = `${API}/user/updateUser`
+        this.axios
+          .post(editUserApi, { id: this.currentUser.id, password: this.currentUser.newPassword })
+          .then((response) => {
+            if (response.data.returnCode == 0) {
+              alert('成功修改使用者密碼，請重新登入')
+              sessionStorage.removeItem('isAuthenticated')
+              this.$router.push('/login')
+              this.editDialogVisible = false
+            }
+          })
       } catch (error) {
         console.error(error)
       }
@@ -218,9 +213,16 @@ export default {
       this.deleteUserData = scope
     },
     deleteUser() {
-      alert('刪除成功')
-      this.getUsers()
-      console.log('刪除使用者', this.deleteUserData.id)
+      const deleteUserApi = `${API}/user/deleteUser`
+      this.axios.post(deleteUserApi, { id: this.deleteUserData.id }).then((response) => {
+        if (response.data.returnCode == 0) {
+          alert(response.data.message)
+          this.getUsers()
+        } else {
+          alert(response.data.message)
+        }
+        this.deleteDialogVisible = false
+      })
     }
   },
   mounted() {
