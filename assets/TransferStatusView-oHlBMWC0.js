@@ -1,1 +1,0 @@
-import{_ as s,c as o,a as t,t as a,o as n}from"./index-uJ9wh_J2.js";const r={data(){return{text:"臨停 > 停車場帳務BC > 傳輸狀態"}}},c={class:"container"},_=t("p",null,"頁面建置中...",-1);function i(p,l,d,u,e,f){return n(),o("div",c,[t("p",null,a(e.text),1),_])}const m=s(r,[["render",i]]);export{m as default};

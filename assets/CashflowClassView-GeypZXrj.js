@@ -1,0 +1,1 @@
+import{_ as s,c as o,a as t,t as a,o as n}from"./index-KQMgRxY9.js";const r={data(){return{text:"基本資料 > 金流 > 金流種類"}}},c=t("p",null,"頁面建置中...",-1);function l(p,_,i,u,e,d){return n(),o("div",null,[t("p",null,a(e.text),1),c])}const x=s(r,[["render",l]]);export{x as default};

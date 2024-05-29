@@ -1,0 +1,1 @@
+import{_ as n,c as o,a as t,t as s,o as c}from"./index-KQMgRxY9.js";const a={data(){return{text:"其他帳務 > 進項"}}},r=t("p",null,"頁面建置中...",-1);function p(l,_,u,i,e,d){return c(),o("div",null,[t("p",null,s(e.text),1),r])}const x=n(a,[["render",p]]);export{x as default};
