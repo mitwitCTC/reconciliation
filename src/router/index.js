@@ -15,77 +15,77 @@ const router = createRouter({
       meta: { title: '登入' }
     },
     {
-      path: '/',
+      path: '/:group',
       name: 'home',
       component: HomeView,
       children: [
         {
-          path: '/basic',
+          path: 'basic',
           name: '基本資料',
           component: BasicView,
           children: [
             {
-              path: '/basic/companies',
+              path: 'companies',
               name: '公司基本資料',
               component: () => import('@/views/basicInfo/CompaniesView.vue'),
               meta: { title: '公司基本資料' }
             },
             {
-              path: '/basic/carparks',
+              path: 'carparks',
               name: '場站基本資料',
               component: () => import('@/views/basicInfo/CarparksView.vue'),
               meta: { title: '場站基本資料' }
             },
             {
-              path: '/basic/users',
+              path: 'users',
               name: '使用者管理',
               component: () => import('@/views/basicInfo/UsersView.vue'),
               meta: { title: '使用者管理'}
             },
             {
-              path: '/basic/equipments',
+              path: 'equipments',
               name: '設備管理',
               component: () => import('@/views/basicInfo/EquipmentsView.vue'),
               meta: { title: '設備管理' },
               children: [
                 {
-                  path: '/basic/equipments/equipment-items',
+                  path: 'equipment-items',
                   name: '設備項目',
                   component: () => import('@/views/Equipments/EquipmentItemsView.vue')
                 },
                 {
-                  path: '/basic/equipments/equipment-carpark',
+                  path: 'equipment-carpark',
                   name: '場站設備管理',
                   component: () => import('@/views/Equipments/CarparkEquipmentView.vue')
                 }
               ]
             },
             {
-              path: '/basic/cashflow',
+              path: 'cashflow',
               name: '金流',
               component: () => import('@/views/basicInfo/CashflowView.vue'),
               meta: { title: '金流' },
               children: [
                 {
-                  path: '/basic/cashflow/bank-management',
+                  path: 'bank-management',
                   name: '銀行管理',
                   component: () => import('@/views/Cashflow/BankManagementView.vue'),
                   meta: { title: '銀行管理' }
                 },
                 {
-                  path: '/basic/cashflow/cashflow-class',
+                  path: 'cashflow-class',
                   name: '金流種類',
                   component: () => import('@/views/Cashflow/CashflowClassView.vue'),
                   meta: { title: '金流種類' }
                 },
                 {
-                  path: '/basic/cashflow/cashflow-management',
+                  path: 'cashflow-management',
                   name: '金流管理',
                   component: () => import('@/views/Cashflow/CashflowManagementView.vue'),
                   meta: { title: '金流管理' }
                 },
                 {
-                  path: '/basic/cashflow/carpark-account',
+                  path: 'carpark-account',
                   name: '場帳對應',
                   component: () => import('@/views/Cashflow/CarparkAccountView.vue'),
                   meta: { title: '場帳對應' }
@@ -93,7 +93,7 @@ const router = createRouter({
               ]
             },
             {
-              path: '/basic/accounting-account',
+              path: 'accounting-account',
               name: '會計科目',
               component: () => import('@/views/basicInfo/AccountingAccountView.vue'),
               meta: { title: '會計科目' }
@@ -101,12 +101,12 @@ const router = createRouter({
           ]
         },
         {
-          path: '/temporaryparking',
+          path: 'temporaryparking',
           name: '臨停',
           component: TempparkingView,
           children: [
             {
-              path: '/temporaryparking/tempparking-member',
+              path: 'tempparking-member',
               name: '臨停會員',
               component: () => import('@/views/tempParking/TempparkingMemberView.vue'),
               meta: { title: '臨停會員' }
@@ -149,39 +149,39 @@ const router = createRouter({
             //   ]
             // },
             {
-              path: '/temporaryparking/bank-accounts',
+              path: 'bank-accounts',
               name: '銀行帳務BC',
               component: () => import('@/views/tempParking/bankAccounts/BankAccountsBCView.vue'),
               meta: { title: '銀行帳務BC' },
               children: [
                 {
-                  path: '/temporaryparking/bank-accounts/reconciliation',
+                  path: 'reconciliation',
                   name: '轉應收帳',
                   component: () =>
                     import('@/views/tempParking/bankAccounts/ReconciliationView.vue'),
                   meta: { title: '轉應收帳' }
                 },
                 {
-                  path: '/temporaryparking/bank-accounts/transfer-status',
+                  path: 'transfer-status',
                   name: '傳輸狀態',
                   component: () =>
                     import('@/views/tempParking/bankAccounts/TransferStatusView.vue'),
                   meta: { title: '傳輸狀態' }
                 },
                 {
-                  path: '/temporaryparking/bank-accounts/cash-in-transit',
+                  path: 'cash-in-transit',
                   name: '轉在途現金',
                   component: () => import('@/views/tempParking/bankAccounts/CashInTransitView.vue'),
                   meta: { title: '轉在途現金' }
                 },
                 {
-                  path: '/temporaryparking/bank-accounts/work-log',
+                  path: 'work-log',
                   name: '工作日誌',
                   component: () => import('@/views/tempParking/bankAccounts/WorkLogsView.vue'),
                   meta: { title: '工作日誌' }
                 },
                 {
-                  path: '/temporaryparking/bank-accounts/subpoena-record',
+                  path: 'subpoena-record',
                   name: '傳票紀錄',
                   component: () =>
                     import('@/views/tempParking/bankAccounts/SubpoenaRecordView.vue'),
@@ -190,7 +190,7 @@ const router = createRouter({
               ]
             },
             {
-              path: '/temporaryparking/financial-statements',
+              path: 'financial-statements',
               name: '報表',
               component: () => import('@/views/tempParking/FinancialStatementsView.vue'),
               meta: { title: '報表' }
@@ -198,18 +198,18 @@ const router = createRouter({
           ]
         },
         {
-          path: '/otheraccounts',
+          path: 'otheraccounts',
           name: '其他帳務',
           component: OtherAccountsView,
           children: [
             {
-              path: '/otheraccounts/input-account',
+              path: 'input-account',
               name: '進項',
               component: () => import('@/views/OtherAccounts/InputAccountView.vue'),
               meta: { title: '進項' }
             },
             {
-              path: '/otheraccounts/output-account',
+              path: 'output-account',
               name: '銷項',
               component: () => import('@/views/OtherAccounts/OutputAccountView.vue'),
               meta: { title: '銷項' }
@@ -226,7 +226,7 @@ router.beforeEach((to) => {
   if (to.name !== 'login' && !isAuthenticated) {
     return { name: 'login' }
   } else if (to.name == 'login' && isAuthenticated) {
-    router.push('/reconciliation')
+    router.push('/MDAx/basic/companies')
   }
   if (to.meta.title) {
     document.title = to.meta.title

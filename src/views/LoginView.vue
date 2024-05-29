@@ -36,9 +36,11 @@ export default {
           })
           if (response.data.data.length === 1) {
             sessionStorage.setItem('isAuthenticated', 'true')
-            this.$router.push('/basic/companies')
+            const group = '001'
+            const base64EncodedGroup = btoa(group)
+            this.$router.push(`/${base64EncodedGroup}/basic/companies`)
           } else {
-            alert("帳號或密碼錯誤")
+            alert('帳號或密碼錯誤')
           }
         } catch (error) {
           console.error('Error verifying password:', error)

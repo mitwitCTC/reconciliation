@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute  } from 'vue-router'
 
 export default {
   data() {
@@ -31,19 +31,22 @@ export default {
     generateNavData() {
       const router = useRouter()
       const routes = router.options.routes || []
+      const route = useRoute()
+      const group = route.params.group
 
       // 排除 login ，生成導航樹資料
-      const generateTreeData = (routes) => {
+      const generateTreeData = (routes, basePath = '') => {
         return routes.map(route => {
           if (route.name === 'login') {
             return null
           }
 
+          const itemPath = `${basePath}/${route.path}`.replace(/\/+/g, '/')
           const item = {
             id: route.name,
             label: route.meta?.title || route.name,
-            path: route.path,
-            children: route.children ? generateTreeData(route.children) : []
+            path: `/${group}${itemPath}`,
+            children: route.children ? generateTreeData(route.children, itemPath) : []
           }
 
           // 過濾掉沒有子路由的 children 屬性
@@ -55,7 +58,7 @@ export default {
         }).filter(item => item !== null)
       }
 
-      this.navData = generateTreeData(routes)
+      this.navData = generateTreeData(routes.find(route => route.name === 'home').children)
     },
     handleNodeClick(data) {
       if (data.path) {
