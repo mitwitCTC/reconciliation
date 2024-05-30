@@ -9,7 +9,7 @@ export default {
 </script>
 
 <template>
-  <main class="container">
+  <main>
     <TheWelcome />
   </main>
 </template>

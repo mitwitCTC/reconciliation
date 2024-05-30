@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
-    <div class="d-flex justify-content-center align-items-center">
-      <h2 class="flex-grow-1 text-center">{{ pageTitle }}</h2>
-      <el-button class="ms-auto" @click="openCarParkDialog()">新增</el-button>
+  <div>
+    <div class="d-flex align-items-center custom-container">
+      <h2 class="mb-0">{{ pageTitle }}</h2>
+      <el-button class="header-button" @click="openCarParkDialog()">新增</el-button>
     </div>
 
     <el-table :data="carParks" height="600">
