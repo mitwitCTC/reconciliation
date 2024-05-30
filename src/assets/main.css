@@ -1,1 +1,14 @@
 /* @import './base.css'; */
+.custom-container {
+  position: relative;
+}
+
+.custom-container h2 {
+  flex: 1;
+  text-align: center;
+}
+
+.custom-container .header-button {
+  position: absolute;
+  right: 0;
+}
