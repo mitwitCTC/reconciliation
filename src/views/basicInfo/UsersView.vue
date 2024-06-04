@@ -87,6 +87,7 @@ export default {
   data() {
     return {
       pageTitle: '',
+      loginUser: '',
       users: [],
       addDialogVisible: false,
       editDialogVisible: false,
@@ -107,6 +108,9 @@ export default {
   methods: {
     getPageTitle() {
       this.pageTitle = this.$route.name
+    },
+    getLoginUser() {
+      this.loginUser = atob(sessionStorage.getItem('account'))
     },
     getUsers() {
       const getUsersAPi = `${API}/user/searchUser`
@@ -181,11 +185,19 @@ export default {
           .post(editUserApi, { id: this.currentUser.id, password: this.currentUser.newPassword })
           .then((response) => {
             if (response.data.returnCode == 0) {
-              alert('成功修改使用者密碼，請重新登入')
-              sessionStorage.removeItem('isAuthenticated')
-              this.$router.push('/login')
-              this.editDialogVisible = false
+              if (this.loginUser == this.currentUser.account) {
+                alert('成功修改使用者密碼，請重新登入')
+                sessionStorage.removeItem('account')
+                sessionStorage.removeItem('activeMenu')
+                sessionStorage.removeItem('isAuthenticated')
+                this.$router.push('/login')
+              } else {
+                alert(response.data.message)
+              }
+            } else {
+              alert(response.data.message)
             }
+            this.editDialogVisible = false
           })
       } catch (error) {
         console.error(error)
@@ -218,6 +230,12 @@ export default {
         if (response.data.returnCode == 0) {
           alert(response.data.message)
           this.getUsers()
+          if (this.loginUser == this.deleteUserData.account) {
+            sessionStorage.removeItem('account')
+            sessionStorage.removeItem('activeMenu')
+            sessionStorage.removeItem('isAuthenticated')
+            this.$router.push('/login')
+          }
         } else {
           alert(response.data.message)
         }
@@ -228,6 +246,7 @@ export default {
   mounted() {
     this.getPageTitle()
     this.getUsers()
+    this.getLoginUser()
   },
   computed: {
     dialogTitle() {

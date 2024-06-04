@@ -38,6 +38,8 @@ export default {
             sessionStorage.setItem('isAuthenticated', 'true')
             const group = '001'
             const base64EncodedGroup = btoa(group)
+            const acc = btoa(this.account)
+            sessionStorage.setItem('account', acc)
             this.$router.push(`/${base64EncodedGroup}/basic/companies`)
           } else if (response.data.returnCode == -1){
             alert(response.data.message)
