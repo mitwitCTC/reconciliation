@@ -34,13 +34,13 @@ export default {
             account: this.account,
             password: this.password
           })
-          if (response.data.data.length === 1) {
+          if (response.data.returnCode == 0) {
             sessionStorage.setItem('isAuthenticated', 'true')
             const group = '001'
             const base64EncodedGroup = btoa(group)
             this.$router.push(`/${base64EncodedGroup}/basic/companies`)
-          } else {
-            alert('帳號或密碼錯誤')
+          } else if (response.data.returnCode == -1){
+            alert(response.data.message)
           }
         } catch (error) {
           console.error('Error verifying password:', error)
