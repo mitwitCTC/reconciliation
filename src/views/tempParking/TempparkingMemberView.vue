@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <p>{{ text }}</p>
         <p>頁面建置中...</p>
     </div>  
