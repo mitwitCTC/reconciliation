@@ -39,6 +39,7 @@
 
 <script>
 import { useRouter, useRoute } from 'vue-router'
+import { markRaw } from 'vue'
 import { Setting } from '@element-plus/icons-vue'
 
 export default {
@@ -76,7 +77,7 @@ export default {
               id: route.name,
               label: route.meta?.title || route.name,
               path: `/${group}${itemPath}`,
-              icon: Setting,
+              icon: markRaw(Setting),
               children: route.children
                 ? generateTreeData(route.children, itemPath, openedPaths)
                 : []
