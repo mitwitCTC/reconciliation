@@ -1,11 +1,8 @@
 <template>
   <div>
-    <div class="d-flex align-items-center custom-container">
-      <h2 class="mb-0">{{ pageTitle }}</h2>
-      <el-button class="header-button" @click="openCompanyDialog()">新增</el-button>
-    </div>
+    <h2 class="text-center">{{ pageTitle }}</h2>
 
-    <el-table :data="companies" height="600">
+    <el-table :data="companies" height="400">
       <el-table-column align="center" prop="name" label="公司名稱" />
       <el-table-column align="center" prop="taxNumber" label="統編" />
       <el-table-column align="center" prop="receiptTitle" label="抬頭" />
@@ -22,8 +19,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-button type="success" class="mt-4" style="width: 100%" @click="openCompanyDialog()">
+      新增公司基本資料
+    </el-button>
 
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" center>
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" :width="dialogWidth" center>
       <el-form
         :model="currentCompany"
         label-width="auto"
@@ -56,21 +56,21 @@
       v-model="deleteCompanyDialogVisible"
       :close-on-click-modal="false"
       title="刪除公司基本資料"
-      width="500"
+      :width="dialogWidth"
       center
     >
       <div class="d-flex flex-column">
         <div class="row mb-2 justify-content-center">
-          <div class="col-3 text-end">公司名稱</div>
-          <div class="col-4 text-start fw-bold">{{ deleteCompanyData.name }}</div>
+          <div class="col-6 text-end">公司名稱</div>
+          <div class="col-6 text-start fw-bold">{{ deleteCompanyData.name }}</div>
         </div>
         <div class="row mb-2 justify-content-center">
-          <div class="col-3 text-end">統編</div>
-          <div class="col-4 text-start fw-bold">{{ deleteCompanyData.taxNumber }}</div>
+          <div class="col-6 text-end">統編</div>
+          <div class="col-6 text-start fw-bold">{{ deleteCompanyData.taxNumber }}</div>
         </div>
         <div class="row mb-2 justify-content-center">
-          <div class="col-3 text-end">抬頭</div>
-          <div class="col-4 text-start fw-bold">{{ deleteCompanyData.receiptTitle }}</div>
+          <div class="col-6 text-end">抬頭</div>
+          <div class="col-6 text-start fw-bold">{{ deleteCompanyData.receiptTitle }}</div>
         </div>
       </div>
       <template #footer>

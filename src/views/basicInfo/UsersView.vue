@@ -1,13 +1,10 @@
 <template>
   <div>
-    <div class="d-flex align-items-center custom-container">
-      <h2 class="mb-0">{{ pageTitle }}</h2>
-      <el-button class="header-button" @click="openUserDialog()">新增</el-button>
-    </div>
+    <h2 class="text-center">{{ pageTitle }}</h2>
 
-    <el-table :data="users" height="600">
+    <el-table :data="users" height="400">
       <el-table-column align="center" prop="userName" label="使用者名稱" />
-      <el-table-column align="center" prop="taxNumber" label="帳號" />
+      <el-table-column align="center" prop="account" label="帳號" />
       <el-table-column align="center" label="修改密碼" fixed="right">
         <template v-slot="scope">
           <el-button @click="openUserDialog(scope.row)">修改</el-button>
@@ -19,9 +16,12 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-button type="success" class="mt-4" style="width: 100%" @click="openUserDialog()">
+      新增使用者資料
+    </el-button>
 
     <!-- 新增 dialog -->
-    <el-dialog v-model="addDialogVisible" :title="dialogTitle" width="500" center>
+    <el-dialog v-model="addDialogVisible" :title="dialogTitle" :width="dialogWidth" center>
       <el-form :model="currentUser" label-width="auto" :rules="userFormRules" ref="userForm">
         <el-form-item label="使用者名稱" prop="userName">
           <el-input v-model="currentUser.userName"></el-input>
@@ -40,7 +40,7 @@
     </el-dialog>
 
     <!-- 修改 dialog -->
-    <el-dialog v-model="editDialogVisible" :title="dialogTitle" width="500" center>
+    <el-dialog v-model="editDialogVisible" :title="dialogTitle" :width="dialogWidth" center>
       <el-form :model="currentUser" label-width="auto" :rules="userFormRules" ref="userForm">
         <el-form-item label="使用者名稱" prop="userName">
           <el-input v-model="currentUser.userName" disabled></el-input>
@@ -65,11 +65,11 @@
     </el-dialog>
 
     <!-- 刪除 dialog -->
-    <el-dialog v-model="deleteDialogVisible" title="刪除使用者" width="500" center>
+    <el-dialog v-model="deleteDialogVisible" title="刪除使用者" :width="dialogWidth" center>
       <div class="d-flex flex-column">
         <div class="row mb-2 justify-content-center">
-          <div class="col-3 text-end">使用者帳號</div>
-          <div class="col-4 text-start fw-bold">{{ deleteUserData.account }}</div>
+          <div class="col-6 text-end">使用者帳號</div>
+          <div class="col-6 text-start fw-bold">{{ deleteUserData.account }}</div>
         </div>
       </div>
       <div class="dialog-footer d-flex justify-content-end">

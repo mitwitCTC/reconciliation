@@ -1,10 +1,8 @@
 <template>
     <div>
-        <div class="d-flex align-items-center custom-container">
-            <h2 class="mb-0">{{ pageTitle }}</h2>
-            <el-button class="header-button" @click="openCashflowDialog()">新增</el-button>
-        </div>
-        <el-table :data="cashFlow" height="600">
+        <h2 class="text-center">{{ pageTitle }}</h2>
+
+        <el-table :data="cashFlow" height="400">
             <el-table-column align="center" prop="merchnatId" label="特店代號" />
             <el-table-column align="center" prop="bankName" label="銀行">
             </el-table-column>
@@ -21,9 +19,12 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-button type="success" class="mt-4" style="width: 100%" @click="openCashflowDialog()">
+            新增金流對應
+        </el-button>
 
         <!-- 新增/修改 dialog -->
-        <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500" center>
+        <el-dialog v-model="dialogVisible" :title="dialogTitle" :width=dialogWidth center>
             <el-form :model="currentCashFlow" label-width="auto" :rules="cashFlowFormRules" ref="eidtCashflowForm">
                 <el-form-item label="特店代號" prop="merchnatId">
                     <el-input v-model="currentCashFlow.merchnatId"></el-input>
@@ -55,23 +56,23 @@
         </el-dialog>
         <!-- 新增/修改 dialog -->
         <!-- 刪除 dialog -->
-        <el-dialog v-model="deleteDialogVisible" :close-on-click-modal="false" title="刪除金流" width="500" center>
+        <el-dialog v-model="deleteDialogVisible" :close-on-click-modal="false" title="刪除金流" :width=dialogWidth center>
             <div class="d-flex flex-column">
                 <div class="row mb-2 justify-content-center">
-                    <div class="col-3 text-end">特店代號</div>
-                    <div class="col-4 text-start fw-bold">{{ deleteCashflowData.merchnatId }}</div>
+                    <div class="col-6 text-end">特店代號</div>
+                    <div class="col-6 text-start fw-bold">{{ deleteCashflowData.merchnatId }}</div>
                 </div>
                 <div class="row mb-2 justify-content-center">
-                    <div class="col-3 text-end">銀行</div>
-                    <div class="col-4 text-start fw-bold">{{ deleteCashflowData.bankName }}</div>
+                    <div class="col-6 text-end">銀行</div>
+                    <div class="col-6 text-start fw-bold">{{ deleteCashflowData.bankName }}</div>
                 </div>
                 <div class="row mb-2 justify-content-center">
-                    <div class="col-3 text-end">場站名稱</div>
-                    <div class="col-4 text-start fw-bold">{{ deleteCashflowData.parkName }}</div>
+                    <div class="col-6 text-end">場站名稱</div>
+                    <div class="col-6 text-start fw-bold">{{ deleteCashflowData.parkName }}</div>
                 </div>
                 <div class="row mb-2 justify-content-center">
-                    <div class="col-3 text-end">金流來源</div>
-                    <div class="col-4 text-start fw-bold">{{ deleteCashflowData.casedescribe }}</div>
+                    <div class="col-6 text-end">金流來源</div>
+                    <div class="col-6 text-start fw-bold">{{ deleteCashflowData.casedescribe }}</div>
                 </div>
             </div>
             <template #footer>
