@@ -1,6 +1,7 @@
 /* @import './base.css'; */
 .custom-container {
   position: relative;
+  margin-bottom: 5px;
 }
 
 .custom-container h2 {
@@ -11,4 +12,10 @@
 .custom-container .header-button {
   position: absolute;
   right: 90px;
+}
+
+@media (max-width: 376px) {
+  .custom-container .header-button {
+    right: 10px;
+  }
 }

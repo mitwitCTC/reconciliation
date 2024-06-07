@@ -36,16 +36,22 @@ export default {
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header class="d-flex justify-content-between align-items-center">
+      <el-header class="d-flex justify-content-between align-items-center fixed-top bg-white">
         <div class="d-flex align-items-center">
           <div class="aside-toggle" @click="toggleAside" :class="{ 'collapsed': isAsideCollapsed }">
-            <el-icon size="20px" color="#004080" v-if="isAsideCollapsed"><Expand /></el-icon>
-            <el-icon size="20px" color="#004080" v-else><Fold /></el-icon>
+            <el-icon size="20px" color="#004080" v-if="isAsideCollapsed">
+              <Expand />
+            </el-icon>
+            <el-icon size="20px" color="#004080" v-else>
+              <Fold />
+            </el-icon>
           </div>
           <h2>力揚帳務</h2>
         </div>
         <div class="d-flex align-items-center logout" @click="logout()">
-          <el-icon><SwitchButton /></el-icon>
+          <el-icon>
+            <SwitchButton />
+          </el-icon>
           登出
         </div>
       </el-header>
@@ -86,7 +92,8 @@ export default {
 }
 
 .el-aside {
-  height: 90vh;
+  top: 60px;
+  height: 95vh;
   overflow-y: auto;
   transition: width 0.5s;
   /* 移除 scrollbar 樣式 */
@@ -111,6 +118,8 @@ export default {
 
 .el-main {
   position: relative;
+  height: 95vh;
+  top: 60px;
 }
 
 .overlay {
@@ -121,5 +130,11 @@ export default {
   bottom: 0;
   background: rgba(0, 0, 0, 0.3);
   z-index: 2;
+}
+
+@media (max-width: 376px) {
+  .logout {
+    margin-right: 10px;
+  }
 }
 </style>
