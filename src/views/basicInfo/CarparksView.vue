@@ -106,7 +106,6 @@ import { API } from '@/App.vue'
 export default {
   data() {
     return {
-      pageTitle: '',
       carParks: [],
       users: [],
       dialogVisible: false,
@@ -136,15 +135,11 @@ export default {
     }
   },
   mounted() {
-    this.getPageTitle()
     this.getCarParkData()
     this.getCompanyData()
     this.getUsers()
   },
   methods: {
-    getPageTitle() {
-      this.pageTitle = this.$route.name
-    },
     getCarParkData() {
       const getCarParkDataApi = `${API}/main/searchCarPark`
       this.axios.get(getCarParkDataApi).then((response) => {

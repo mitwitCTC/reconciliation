@@ -86,7 +86,6 @@ import { API } from '@/App.vue'
 export default {
   data() {
     return {
-      pageTitle: '',
       loginUser: '',
       users: [],
       addDialogVisible: false,
@@ -106,9 +105,6 @@ export default {
     }
   },
   methods: {
-    getPageTitle() {
-      this.pageTitle = this.$route.name
-    },
     getLoginUser() {
       this.loginUser = atob(sessionStorage.getItem('account'))
     },
@@ -244,7 +240,6 @@ export default {
     }
   },
   mounted() {
-    this.getPageTitle()
     this.getUsers()
     this.getLoginUser()
   },

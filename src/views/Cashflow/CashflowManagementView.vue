@@ -93,7 +93,6 @@ import { ElLoading } from 'element-plus'
 export default {
     data() {
         return {
-            pageTitle: '',
             cashFlow: [],
             dialogVisible: false,
             isEditing: false,
@@ -123,9 +122,6 @@ export default {
                 text: text,
                 background: 'rgba(0, 0, 0, 0.7)'
             })
-        },
-        getPageTitle() {
-            this.pageTitle = this.$route.name
         },
         searchCashFlow() {
             const loading = this.showLoading('載入中...')
@@ -241,7 +237,6 @@ export default {
         }
     },
     mounted() {
-        this.getPageTitle()
         this.searchCashFlow()
         this.getSearchInfo()
     },
