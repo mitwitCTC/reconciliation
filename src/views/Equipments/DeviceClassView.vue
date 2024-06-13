@@ -44,7 +44,7 @@
   >
     <div class="d-flex flex-column">
       <div class="row mb-2 justify-content-center">
-        <div class="col-6 text-end">場站名稱</div>
+        <div class="col-6 text-end">設備名稱</div>
         <div class="col-6 text-start fw-bold">{{ deleteDeviceClassData.deviceName }}</div>
       </div>
     </div>
@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     dialogTitle() {
-      return this.isEditing ? '修改場站資料' : '新增場站資料'
+      return this.isEditing ? '修改設備項目' : '新增設備項目'
     }
   },
   methods: {
@@ -135,6 +135,7 @@ export default {
     },
     deleteDeviceClass() {
       alert('成功刪除設備項目')
+      this.deleteDeviceClassDialogVisible = false
       console.log('成功刪除設備項目', this.deleteDeviceClassData)
     }
   }
