@@ -25,11 +25,10 @@
     </el-table-column>
   </el-table>
   <el-button type="success" class="mt-4" style="width: 100%" @click="openParkDriverDialog()">
-    新增設備項目
+    新增場站設備
   </el-button>
 
   <el-dialog v-model="dialogVisible" :title="dialogTitle" :width="dialogWidth" center>
-    {{ currentParkDriver }}
     <el-form
       :model="currentParkDriver"
       label-width="auto"
@@ -82,7 +81,7 @@
   <el-dialog
     v-model="deleteParkDriverDialogVisible"
     :close-on-click-modal="false"
-    title="刪除設備項目"
+    title="刪除場站設備"
     :width="dialogWidth"
     center
   >
