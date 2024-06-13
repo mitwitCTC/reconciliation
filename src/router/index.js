@@ -56,7 +56,7 @@ const router = createRouter({
                 {
                   path: 'equipment-carpark',
                   name: '場站設備管理',
-                  component: () => import('@/views/Equipments/CarparkEquipmentView.vue')
+                  component: () => import('@/views/Equipments/ParkDriverView.vue')
                 }
               ]
             },
