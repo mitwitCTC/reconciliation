@@ -4,7 +4,7 @@
 
     <el-table :data="users" height="400">
       <el-table-column align="center" prop="userName" label="使用者名稱" />
-      <el-table-column align="center" prop="taxNumber" label="帳號" />
+      <el-table-column align="center" prop="account" label="帳號" />
       <el-table-column align="center" label="修改密碼" fixed="right">
         <template v-slot="scope">
           <el-button @click="openUserDialog(scope.row)">修改</el-button>
@@ -86,7 +86,6 @@ import { API } from '@/App.vue'
 export default {
   data() {
     return {
-      pageTitle: '',
       loginUser: '',
       users: [],
       addDialogVisible: false,
@@ -107,9 +106,6 @@ export default {
     }
   },
   methods: {
-    getPageTitle() {
-      this.pageTitle = this.$route.name
-    },
     getLoginUser() {
       this.loginUser = atob(sessionStorage.getItem('account'))
     },
@@ -245,7 +241,6 @@ export default {
     }
   },
   mounted() {
-    this.getPageTitle()
     this.getUsers()
     this.getLoginUser()
   },

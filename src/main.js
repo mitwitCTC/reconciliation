@@ -15,6 +15,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 import dialogWidthMixin from './mixins/dialogWidthMixin'
+import getPageTitleMixin from './mixins/getPageTitleMixin'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -25,6 +26,7 @@ app.use(createPinia())
 app.use(router)
 app.use(ElementPlus, ElementPlusIconsVue)
 app.use(VueAxios, axios)
-app.mixin(dialogWidthMixin);
+app.mixin(dialogWidthMixin)
+app.mixin(getPageTitleMixin)
 
 app.mount('#app')

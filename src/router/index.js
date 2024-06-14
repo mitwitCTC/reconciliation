@@ -51,12 +51,12 @@ const router = createRouter({
                 {
                   path: 'equipment-items',
                   name: '設備項目',
-                  component: () => import('@/views/Equipments/EquipmentItemsView.vue')
+                  component: () => import('@/views/Equipments/DeviceClassView.vue')
                 },
                 {
                   path: 'equipment-carpark',
                   name: '場站設備管理',
-                  component: () => import('@/views/Equipments/CarparkEquipmentView.vue')
+                  component: () => import('@/views/Equipments/ParkDriverView.vue')
                 }
               ]
             },

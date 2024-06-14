@@ -89,7 +89,6 @@ import { API } from '@/App.vue'
 export default {
   data() {
     return {
-      pageTitle: '',
       companies: [],
       dialogVisible: false,
       currentCompany: {
@@ -119,13 +118,9 @@ export default {
     }
   },
   mounted() {
-    this.getPageTitle()
     this.getCompanyData()
   },
   methods: {
-    getPageTitle() {
-      this.pageTitle = this.$route.name
-    },
     getCompanyData() {
       const getCompanyDataApi = `${API}/main/searchCompanyInfo`
       this.axios.get(getCompanyDataApi).then((response) => {
