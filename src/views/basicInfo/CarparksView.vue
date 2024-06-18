@@ -2,7 +2,14 @@
   <div>
     <h2 class="text-center">{{ pageTitle }}</h2>
 
-    <el-table :data="carParks" height="400">
+    <div class="search d-flex justify-content-end align-items-center col-12 col-md-3">
+      <el-input v-model="searchQuery" placeholder="請輸入場站名稱" clearable>
+        <template #prefix>
+          <el-icon class="el-input__icon"><search /></el-icon>
+        </template>
+      </el-input>
+    </div>
+    <el-table :data="filteredCarParks" height="400">
       <el-table-column align="center" prop="name" label="場站名稱" />
       <el-table-column align="center" prop="taxNumber" label="統編" />
       <el-table-column align="center" prop="receiptTitle" label="抬頭" />
@@ -106,6 +113,7 @@ import { API } from '@/App.vue'
 export default {
   data() {
     return {
+      searchQuery: '',
       carParks: [],
       users: [],
       dialogVisible: false,
@@ -132,6 +140,14 @@ export default {
   computed: {
     dialogTitle() {
       return this.isEditing ? '修改場站資料' : '新增場站資料'
+    },
+    filteredCarParks() {
+      if (this.searchQuery.trim() === '') {
+        return this.carParks
+      }
+      return this.carParks.filter((carPark) => {
+        return carPark.name.includes(this.searchQuery)
+      })
     }
   },
   mounted() {
@@ -177,6 +193,7 @@ export default {
         // 編輯模式
         this.isEditing = true
         this.currentCarPark = { ...CarPark }
+        delete this.currentCarPark.deleteTime
         // 根據 companyId 匹配 taxNumber、receiptTitle
         const selectedCompany = this.companies.find(
           (company) => company.id === this.currentCarPark.companyId
