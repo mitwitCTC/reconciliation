@@ -111,43 +111,44 @@ const router = createRouter({
               component: () => import('@/views/tempParking/TempparkingMemberView.vue'),
               meta: { title: '臨停會員' }
             },
-            // {
-            //   path: '/temporaryparking/carpark-accounts',
-            //   name: '停車場帳務AB',
-            //   component: () =>
-            //     import('@/views/tempParking/CarparkAccountAB/CarparkAccountABView.vue'),
-            //   meta: { title: '停車場帳務AB' },
-            //   children: [
-            //     {
-            //       path: '/temporaryparking/carpark-accounts/reconciliationAB',
-            //       name: '轉應收帳',
-            //       component: () =>
-            //         import('@/views/tempParking/CarparkAccountAB/ReconciliationABView.vue'),
-            //       meta: { title: '轉應收帳' }
-            //     },
-            //     {
-            //       path: '/temporaryparking/carpark-accounts/transfer-statusAB',
-            //       name: '傳輸狀態',
-            //       component: () =>
-            //         import('@/views/tempParking/CarparkAccountAB/TransferStatusABView.vue'),
-            //       meta: { title: '傳輸狀態' }
-            //     },
-            //     {
-            //       path: '/temporaryparking/carpark-accounts/work-logAB',
-            //       name: '工作日誌',
-            //       component: () =>
-            //         import('@/views/tempParking/CarparkAccountAB/WorkLogsABView.vue'),
-            //       meta: { title: '工作日誌' }
-            //     },
-            //     {
-            //       path: '/temporaryparking/carpark-accounts/subpoena-recordAB',
-            //       name: '傳票紀錄',
-            //       component: () =>
-            //         import('@/views/tempParking/CarparkAccountAB/SubpoenaRecordABView.vue'),
-            //       meta: { title: '傳票紀錄' }
-            //     }
-            //   ]
-            // },
+            {
+              path: 'carpark-accounts',
+              name: '銀行帳務AB',
+              component: () => import('@/views/tempParking/carparkAccounts/CarparkAccountABView.vue'),
+              meta: { title: '銀行帳務AB' },
+              children: [
+                {
+                  path: 'reconciliation',
+                  name: '轉應收帳AB',
+                  component: () => import('@/views/tempParking/carparkAccounts/ReconciliationView.vue'),
+                  meta: { title: '轉應收帳' }
+                },
+                {
+                  path: 'transfer-status',
+                  name: '傳輸狀態AB',
+                  component: () => import('@/views/tempParking/carparkAccounts/TransferStatusView.vue'),
+                  meta: { title: '傳輸狀態' }
+                },
+                {
+                  path: 'cash-in-transit',
+                  name: '轉在途現金AB',
+                  component: () => import('@/views/tempParking/carparkAccounts/CashInTransitView.vue'),
+                  meta: { title: '轉在途現金' }
+                },
+                {
+                  path: 'work-log',
+                  name: '工作日誌AB',
+                  component: () => import('@/views/tempParking/carparkAccounts/WorkLogsView.vue'),
+                  meta: { title: '工作日誌' }
+                },
+                {
+                  path: 'subpoena-record',
+                  name: '傳票紀錄AB',
+                  component: () => import('@/views/tempParking/carparkAccounts/SubpoenaRecordView.vue'),
+                  meta: { title: '傳票紀錄' }
+                }
+              ]
+            },
             {
               path: 'bank-accounts',
               name: '銀行帳務BC',
