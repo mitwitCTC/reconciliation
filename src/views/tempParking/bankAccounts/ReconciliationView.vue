@@ -797,6 +797,13 @@ el-table {
   opacity: 0.6;
 }
 
+.el-table__body tr.bg-success:hover > td,
+.el-table__body tr.bg-success:hover {
+  background-color: #6fc5ab !important;
+  border-color: #6fc5ab !important;
+  color: #000000 !important;
+}
+
 .mobile-btns {
   display: flex;
   justify-content: space-between;
