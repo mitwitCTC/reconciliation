@@ -16,6 +16,7 @@ import VueAxios from 'vue-axios'
 import axios from 'axios'
 import dialogWidthMixin from './mixins/dialogWidthMixin'
 import getPageTitleMixin from './mixins/getPageTitleMixin'
+import formattersMixin from './mixins/formattersMixin'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -28,5 +29,6 @@ app.use(ElementPlus, ElementPlusIconsVue)
 app.use(VueAxios, axios)
 app.mixin(dialogWidthMixin)
 app.mixin(getPageTitleMixin)
+app.mixin(formattersMixin)
 
 app.mount('#app')
