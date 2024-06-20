@@ -82,11 +82,7 @@
           </span>
         </p>
 
-        <el-table
-          :data="systemFlow"
-          :row-style="{ height: '50px' }"
-          height="450"
-        >
+        <el-table :data="systemFlow" :row-style="{ height: '50px' }" height="450">
           <el-table-column align="center" prop="parkName" label="場站名稱" />
           <el-table-column align="center" prop="trx_date" label="入帳日" />
           <el-table-column
@@ -265,174 +261,113 @@ export default {
       })
     },
     async getApsStatement() {
-      this.apsData = [
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: '悠遊卡',
-          TRANS_CASH: '750',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: 'cash',
-          TRANS_CASH: '4025',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: 'linepay',
-          TRANS_CASH: '2315',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: 'jkopay',
-          TRANS_CASH: '340',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: 'easycard',
-          TRANS_CASH: '15',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          TRANS_DATE: '2024-05-30',
-          parkId: 64,
-          TRANS_TYPE: '日結帳',
-          TRANS_CASH: '0',
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        }
-      ]
-      this.apsData = this.apsData.map((item) => ({
-        ...item,
-        TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
-      }))
-      this.countAps = 6
-      this.totalAps = 7620
+      const getApsDataAPI = `${API}/main/apsStatement`
+      this.axios
+        .post(getApsDataAPI, this.searchData)
+        .then((response) => {
+          if (response.data.returnCode == 0) {
+            this.apsData = response.data.data.paymentTrade
+            this.countAps = response.data.data.totalCount
+            this.totalAps = response.data.data.totalAmount
+            this.apsData = this.apsData.map((item) => ({
+              ...item,
+              TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
+            }))
+          } else {
+            console.warn(response.data.message)
+          }
+        })
+        .catch((err) => {
+          console.error('error', err)
+        })
     },
     async getSystemFlow() {
-      this.systemFlow = [
-        {
-          trx_date: '2024-05-30',
-          parkId: 64,
-          parkName: '台中正心立體',
-          trade_amount: '750',
-          tn_amount: 0,
-          s_amount: 750,
-          bankMemo: '悠遊卡公司',
-          voucherDep: '00018024',
-          voucherNum: '1123.30',
-          handlingCharge: null
-        },
-        {
-          trx_date: '2024-05-30',
-          parkId: 64,
-          parkName: '台中正心立體',
-          trade_amount: '105',
-          tn_amount: 2,
-          s_amount: 103,
-          bankMemo: 'iPASS MONEY',
-          voucherDep: '00018024',
-          voucherNum: '1123.60',
-          handlingCharge: null
-        },
-        {
-          trx_date: '2024-05-30',
-          parkId: 64,
-          parkName: '台中正心立體',
-          trade_amount: '2370',
-          tn_amount: 55,
-          s_amount: 2315,
-          bankMemo: '國泰世華商連加',
-          voucherDep: '00018024',
-          voucherNum: '1123.60',
-          handlingCharge: '0.022'
-        }
-      ]
-      this.systemFlow = this.systemFlow.map((item) => ({
-        ...item,
-        trade_amount: Number(item.trade_amount) // 將字串轉換為數值
-      }))
-      this.countSystemFlow = 3
-      this.totalSystemFlow = 6983
+      const getSystemFlowAPI = `${API}/main/systemStatement`
+      this.axios
+        .post(getSystemFlowAPI, this.searchData)
+        .then((response) => {
+          if (response.data.returnCode == 0) {
+            this.systemFlow = response.data.data.paymentTrade
+            this.systemFlow = this.systemFlow.map((item) => ({
+              ...item,
+              trade_amount: Number(item.trade_amount) // 將字串轉換為數值
+            }))
+            this.countSystemFlow = response.data.data.totalCount
+            this.totalSystemFlow = response.data.data.totalAmount
+          } else {
+            console.warn(response.data.message)
+          }
+        })
+        .catch((err) => {
+          console.error('error', err)
+        })
     },
-    openDetailDialog(scope) {
+    async openDetailDialog(scope) {
       const loading = this.showLoading('載入中...')
       this.checkDetail = scope.row
-      this.getDetail()
-        .then(() => {
-          this.dialogTableVisible = true
-          loading.close()
-        })
-        .catch(() => {
-          loading.close()
-        })
+
+      try {
+        await this.getApsDetail()
+        this.dialogTableVisible = true
+      } catch (error) {
+        console.error(error)
+      } finally {
+        loading.close()
+      }
     },
-    async getDetail() {
-      this.apsDetails = [
-        {
-          id: 3059,
-          TRANS_DATE: '2024-05-29',
-          parkId: 64,
-          TRANS_TYPE: '悠遊卡',
-          TRANS_CASH: 15,
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          id: 3060,
-          TRANS_DATE: '2024-05-29',
-          parkId: 64,
-          TRANS_TYPE: '悠遊卡',
-          TRANS_CASH: 120,
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          id: 3067,
-          TRANS_DATE: '2024-05-29',
-          parkId: 64,
-          TRANS_TYPE: '悠遊卡',
-          TRANS_CASH: 60,
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
-        },
-        {
-          id: 3074,
-          TRANS_DATE: '2024-05-29',
-          parkId: 64,
-          TRANS_TYPE: '悠遊卡',
-          TRANS_CASH: 30,
-          parkName: '台中正心立體',
-          voucherDep: '00018024'
+    async getApsDetail() {
+      const getApsDetailAPI = `${API}/main/apsDetail`
+      try {
+        const response = await this.axios.post(getApsDetailAPI, {
+          date: this.checkDetail.TRANS_DATE,
+          TRANS_TYPE: this.checkDetail.TRANS_TYPE,
+          parkId: this.checkDetail.parkId
+        })
+
+        if (response.data.returnCode == 0) {
+          this.apsDetails = response.data.data.paymentTrade
+        } else {
+          console.warn(response.data.message)
         }
-      ]
+      } catch (err) {
+        console.error('error', err)
+      }
     },
     handleDetailChange(row) {
       this.modifyApsDetailData.id = row.id
       this.modifyApsDetailData.date = row.TRANS_DATE
-      console.log(this.modifyApsDetailData)
+      const modifyApsDetailDataAPI = `${API}/main/updateAps`
+      this.axios
+        .post(modifyApsDetailDataAPI, this.modifyApsDetailData)
+        .then((response) => {
+          if (response.data.returnCode == 0) {
+            alert(response.data.message)
+            this.getApsDetail()
+            this.getApsStatement()
+          } else {
+            console.warn(response.data.message)
+          }
+        })
+        .catch((error) => {
+          console.error('error', error)
+        })
     },
     openDeleteDetailDialog(scope) {
       this.deleteDetailDialogVisible = true
       this.deleteDetailData = scope
     },
     deleteDetail() {
-      alert('刪除成功', this.deleteDetailData)
-      console.log('刪除成功', this.deleteDetailData.id)
-      this.getDetail()
+      const deleteDetailAPI = `${API}/main/deleteAps`
+      this.axios.post(deleteDetailAPI, { id: this.deleteDetailData.id }).then((response) => {
+        if (response.data.returnCode == 0) {
+          alert(response.data.message)
+          this.getApsDetail()
+          this.deleteDetailDialogVisible = false
+        } else {
+          alert('刪除失敗！')
+          this.deleteDetailDialogVisible = false
+        }
+      })
       this.deleteDetailDialogVisible = false
     }
   },
