@@ -119,7 +119,7 @@ const router = createRouter({
               children: [
                 {
                   path: 'reconciliation',
-                  name: '轉應收帳AB',
+                  name: '轉應收帳',
                   component: () => import('@/views/tempParking/carparkAccounts/ReconciliationView.vue'),
                   meta: { title: '轉應收帳' }
                 },
@@ -157,10 +157,10 @@ const router = createRouter({
               children: [
                 {
                   path: 'reconciliation',
-                  name: '轉應收帳',
+                  name: '轉銀行存款',
                   component: () =>
                     import('@/views/tempParking/bankAccounts/ReconciliationView.vue'),
-                  meta: { title: '轉應收帳' }
+                  meta: { title: '轉銀行存款' }
                 },
                 {
                   path: 'transfer-status',
