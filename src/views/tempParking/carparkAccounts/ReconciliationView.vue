@@ -238,13 +238,16 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
     },
-    getCarParkData() {
+    async getCarParkData() {
       const getCarParkDataApi = `${API}/main/searchCarPark`
-      this.axios.get(getCarParkDataApi).then((response) => {
-        if (response.data.returnCode == 0) {
+      try {
+        const response = await this.axios.get(getCarParkDataApi)
+        if (response.data.returnCode === 0) {
           this.carParks = response.data.data
         }
-      })
+      } catch (err) {
+        console.error('Error:', err)
+      }
     },
     show() {
       if (this.searchData.date !== '' && this.searchData.parkId !== '') {
@@ -253,64 +256,63 @@ export default {
         alert('搜尋欄位不得為空')
       }
     },
-    compare() {
+    async compare() {
       const loading = this.showLoading('載入中...')
-      Promise.all([this.getApsStatement(), this.getSystemFlow()]).then(() => {
+      try {
+        await Promise.all([this.getApsStatement(), this.getSystemFlow()])
         this.discrepancy = this.totalSystemFlow - this.totalAps
+      } catch (err) {
+        console.error('Error:', err)
+      } finally {
         loading.close()
-      })
+      }
     },
     async getApsStatement() {
       const getApsDataAPI = `${API}/main/apsStatement`
-      this.axios
-        .post(getApsDataAPI, this.searchData)
-        .then((response) => {
-          if (response.data.returnCode == 0) {
-            this.apsData = response.data.data.paymentTrade
-            this.countAps = response.data.data.totalCount
-            this.totalAps = response.data.data.totalAmount
-            this.apsData = this.apsData.map((item) => ({
-              ...item,
-              TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
-            }))
-          } else {
-            console.warn(response.data.message)
-          }
-        })
-        .catch((err) => {
-          console.error('error', err)
-        })
+      try {
+        const response = await this.axios.post(getApsDataAPI, this.searchData)
+        if (response.data.returnCode === 0) {
+          this.apsData = response.data.data.paymentTrade
+          this.countAps = response.data.data.totalCount
+          this.totalAps = response.data.data.totalAmount
+          this.apsData = this.apsData.map((item) => ({
+            ...item,
+            TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
+          }))
+        } else {
+          console.warn(response.data.message)
+        }
+      } catch (err) {
+        console.error('Error:', err)
+      }
     },
     async getSystemFlow() {
       const getSystemFlowAPI = `${API}/main/systemStatement`
-      this.axios
-        .post(getSystemFlowAPI, this.searchData)
-        .then((response) => {
-          if (response.data.returnCode == 0) {
-            this.systemFlow = response.data.data.paymentTrade
-            this.systemFlow = this.systemFlow.map((item) => ({
-              ...item,
-              trade_amount: Number(item.trade_amount) // 將字串轉換為數值
-            }))
-            this.countSystemFlow = response.data.data.totalCount
-            this.totalSystemFlow = response.data.data.totalAmount
-          } else {
-            console.warn(response.data.message)
-          }
-        })
-        .catch((err) => {
-          console.error('error', err)
-        })
+      try {
+        const response = await this.axios.post(getSystemFlowAPI, this.searchData)
+        if (response.data.returnCode === 0) {
+          this.systemFlow = response.data.data.paymentTrade
+          this.countSystemFlow = response.data.data.totalCount
+          this.totalSystemFlow = response.data.data.totalAmount
+          this.systemFlow = this.systemFlow.map((item) => ({
+            ...item,
+            trade_amount: Number(item.trade_amount) // 將字串轉換為數值
+          }))
+        } else {
+          console.warn(response.data.message)
+        }
+      } catch (err) {
+        console.error('Error:', err)
+      }
     },
     async openDetailDialog(scope) {
       const loading = this.showLoading('載入中...')
       this.checkDetail = scope.row
-
       try {
         await this.getApsDetail()
         this.dialogTableVisible = true
-      } catch (error) {
-        console.error(error)
+      } catch (err) {
+        console.error('Error:', err)
       } finally {
         loading.close()
       }
@@ -323,52 +325,53 @@ export default {
           TRANS_TYPE: this.checkDetail.TRANS_TYPE,
           parkId: this.checkDetail.parkId
         })
-
-        if (response.data.returnCode == 0) {
+        if (response.data.returnCode === 0) {
           this.apsDetails = response.data.data.paymentTrade
         } else {
           console.warn(response.data.message)
         }
       } catch (err) {
-        console.error('error', err)
+        console.error('Error:', err)
       }
     },
-    handleDetailChange(row) {
+    async handleDetailChange(row) {
       this.modifyApsDetailData.id = row.id
       this.modifyApsDetailData.date = row.TRANS_DATE
       const modifyApsDetailDataAPI = `${API}/main/updateAps`
-      this.axios
-        .post(modifyApsDetailDataAPI, this.modifyApsDetailData)
-        .then((response) => {
-          if (response.data.returnCode == 0) {
-            alert(response.data.message)
-            this.getApsDetail()
-            this.getApsStatement()
-          } else {
-            console.warn(response.data.message)
-          }
-        })
-        .catch((error) => {
-          console.error('error', error)
-        })
+      try {
+        const response = await this.axios.post(modifyApsDetailDataAPI, this.modifyApsDetailData)
+        if (response.data.returnCode === 0) {
+          alert(response.data.message)
+          await this.getApsDetail()
+          await this.getApsStatement()
+        } else {
+          console.warn(response.data.message)
+        }
+      } catch (err) {
+        console.error('Error:', err)
+      }
     },
     openDeleteDetailDialog(scope) {
       this.deleteDetailDialogVisible = true
       this.deleteDetailData = scope
     },
-    deleteDetail() {
+    async deleteDetail() {
       const deleteDetailAPI = `${API}/main/deleteAps`
-      this.axios.post(deleteDetailAPI, { id: this.deleteDetailData.id }).then((response) => {
-        if (response.data.returnCode == 0) {
+      try {
+        const response = await this.axios.post(deleteDetailAPI, { id: this.deleteDetailData.id })
+        if (response.data.returnCode === 0) {
           alert(response.data.message)
-          this.getApsDetail()
+          await this.getApsDetail()
           this.deleteDetailDialogVisible = false
         } else {
           alert('刪除失敗！')
           this.deleteDetailDialogVisible = false
         }
-      })
-      this.deleteDetailDialogVisible = false
+      } catch (err) {
+        console.error('Error:', err)
+      } finally {
+        this.deleteDetailDialogVisible = false
+      }
     }
   },
   mounted() {
