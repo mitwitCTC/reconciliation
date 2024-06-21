@@ -23,7 +23,7 @@
       :model="currentDeviceClass"
       label-width="auto"
       :rules="deviceClassFormRules"
-      ref="eidtDeviceClassForm"
+      ref="editDeviceClassForm"
     >
       <el-form-item label="設備項目" prop="deviceName">
         <el-input v-model="currentDeviceClass.deviceName"></el-input>
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { API } from '@/App.vue'
+
 export default {
   data() {
     return {
@@ -85,23 +87,21 @@ export default {
   },
   methods: {
     getDeviceClass() {
-      this.deviceClass = [
-        { id: 1, deviceName: 'mitwit' },
-        { id: 2, deviceName: 'ubuti' },
-        { id: 3, deviceName: '富軥新系統' },
-        { id: 4, deviceName: '富軥舊系統' },
-        { id: 5, deviceName: '微程式2代柱' },
-        { id: 6, deviceName: '微程式3代柱' },
-        { id: 7, deviceName: '微程式4代柱' },
-        { id: 8, deviceName: '遠通ETC' },
-        { id: 9, deviceName: '遠通goif' }
-      ]
+      const getDeviceClassAPI = `${API}/main/searchDeviceClass`
+      this.axios.get(getDeviceClassAPI).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.deviceClass = response.data.data
+        } else {
+          console.error(response.data.message)
+        }
+      })
     },
     openDeviceClassDialog(deviceClass) {
       if (deviceClass) {
         // 編輯模式
         this.currentDeviceClass = { ...deviceClass }
         this.isEditing = true
+        delete this.currentDeviceClass.deleteTime
       } else {
         // 新增模式
         this.currentDeviceClass = {
@@ -112,14 +112,28 @@ export default {
       this.dialogVisible = true
     },
     saveDeviceClass() {
-      this.$refs.eidtDeviceClassForm.validate((valid) => {
+      this.$refs.editDeviceClassForm.validate((valid) => {
         if (valid) {
           if (this.isEditing) {
-            alert('修改成功')
-            console.log('修改成功', this.currentDeviceClass)
+            const editDeviceClassAPI = `${API}/main/updateDeviceClass`
+            this.axios.post(editDeviceClassAPI, this.currentDeviceClass).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getDeviceClass()
+              } else {
+                console.error(response.data.message)
+              }
+            })
           } else {
-            alert('新增成功')
-            console.log('新增成功', this.currentDeviceClass)
+            const addDeviceClassAPI = `${API}/main/insertDeviceClass`
+            this.axios.post(addDeviceClassAPI, this.currentDeviceClass).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getDeviceClass()
+              } else {
+                console.error(response.data.message)
+              }
+            })
           }
           this.dialogVisible = false
         }
@@ -127,16 +141,25 @@ export default {
     },
     cancelSaveDeviceClass() {
       this.dialogVisible = false
-      this.$refs.eidtDeviceClassForm.clearValidate()
+      this.$refs.editDeviceClassForm.clearValidate()
     },
     openDeleteDeviceClassDialog(scope) {
       this.deleteDeviceClassDialogVisible = true
       this.deleteDeviceClassData = scope
     },
     deleteDeviceClass() {
-      alert('成功刪除設備項目')
+      const deleteDeviceClassAPI = `${API}/main/deleteDeviceClass`
+      this.axios
+        .post(deleteDeviceClassAPI, { id: this.deleteDeviceClassData.id })
+        .then((response) => {
+          if (response.data.returnCode == 0) {
+            alert(response.data.message)
+            this.getDeviceClass()
+          } else {
+            console.error(response.data.message)
+          }
+        })
       this.deleteDeviceClassDialogVisible = false
-      console.log('成功刪除設備項目', this.deleteDeviceClassData)
     }
   }
 }
