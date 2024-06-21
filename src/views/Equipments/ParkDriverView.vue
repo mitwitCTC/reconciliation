@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import { API } from '@/App.vue'
+
 export default {
   data() {
     return {
@@ -146,96 +148,14 @@ export default {
   },
   methods: {
     getParkDriver() {
-      this.parkDriver = [
-        {
-          id: 1,
-          companyId: 1,
-          parkName: '羅東聖母醫院',
-          deviceName: 'mitwit',
-          driverNO: '439',
-          message: null
-        },
-        {
-          id: 2,
-          companyId: 1,
-          parkName: '羅東聖母醫院',
-          deviceName: 'ubuti',
-          driverNO: 'PROD-ARTT-20230426-143642',
-          message: null
-        },
-        {
-          id: 3,
-          companyId: 1,
-          parkName: '羅東聖母醫院',
-          deviceName: '遠通ETC',
-          driverNO: '18028',
-          message: null
-        },
-        {
-          id: 4,
-          companyId: 1,
-          parkName: '中原',
-          deviceName: 'ubuti',
-          driverNO: 'PA50276',
-          message: '中原無無法串接'
-        },
-        {
-          id: 6,
-          companyId: 1,
-          parkName: '中原',
-          deviceName: 'mitwit',
-          driverNO: '129',
-          message: null
-        },
-        {
-          id: 8,
-          companyId: 1,
-          parkName: '公二',
-          deviceName: 'mitwit',
-          driverNO: '43',
-          message: null
-        },
-        {
-          id: 9,
-          companyId: 1,
-          parkName: '公二',
-          deviceName: 'ubuti',
-          driverNO: 'PA50117',
-          message: null
-        },
-        {
-          id: 10,
-          companyId: 1,
-          parkName: '大忠',
-          deviceName: 'ubuti',
-          driverNO: 'PA50126',
-          message: null
-        },
-        {
-          id: 11,
-          companyId: 1,
-          parkName: '大忠',
-          deviceName: 'mitwit',
-          driverNO: '132',
-          message: null
-        },
-        {
-          id: 12,
-          companyId: 1,
-          parkName: '延平',
-          deviceName: 'ubuti',
-          driverNO: 'PA50506',
-          message: '延平國小無法串接'
-        },
-        {
-          id: 13,
-          companyId: 1,
-          parkName: '延平',
-          deviceName: 'mitwit',
-          driverNO: '192',
-          message: null
+      const getParkDriverAPI = `${API}/main/searchParkDriver`
+      this.axios.get(getParkDriverAPI).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.parkDriver = response.data.data
+        } else {
+          console.error(response.data.message)
         }
-      ]
+      })
     },
     openParkDriverDialog(parkDriver) {
       if (parkDriver) {
@@ -266,85 +186,26 @@ export default {
       this.dialogVisible = true
     },
     getCarParkData() {
-      this.carParks = [
-        {
-          id: 7,
-          name: '大忠',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00011011',
-          userId: null,
-          deleteTime: '0'
-        },
-        {
-          id: 8,
-          name: '中原',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00013005',
-          userId: null,
-          deleteTime: '0'
-        },
-        {
-          id: 37,
-          name: '延平',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00013038',
-          userId: null,
-          deleteTime: '0'
-        },
-        {
-          id: 38,
-          name: '板橋西門',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00015009',
-          userId: null,
-          deleteTime: '0'
-        },
-        {
-          id: 65,
-          name: '公二',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00011012',
-          userId: null,
-          deleteTime: '0'
-        },
-        {
-          id: 82,
-          name: '羅東聖母醫院',
-          companyId: 1,
-          taxNumber: null,
-          receiptTitle: null,
-          voucherDep: '00018028',
-          userId: null,
-          deleteTime: '0'
+      const getCarParkDataApi = `${API}/main/searchCarPark`
+      this.axios.get(getCarParkDataApi).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.carParks = response.data.data
         }
-      ]
+      })
     },
     handleCarparkChange(value) {
       const selectedCarpark = this.carParks.find((carpark) => carpark.id === value)
       this.currentParkDriver.parkId = selectedCarpark.id
     },
     getDeviceClass() {
-      this.deviceClass = [
-        { id: 1, deviceName: 'mitwit' },
-        { id: 2, deviceName: 'ubuti' },
-        { id: 3, deviceName: '富軥新系統' },
-        { id: 4, deviceName: '富軥舊系統' },
-        { id: 5, deviceName: '微程式2代柱' },
-        { id: 6, deviceName: '微程式3代柱' },
-        { id: 7, deviceName: '微程式4代柱' },
-        { id: 8, deviceName: '遠通ETC' },
-        { id: 9, deviceName: '遠通goif' }
-      ]
+      const getDeviceClassAPI = `${API}/main/searchDeviceClass`
+      this.axios.get(getDeviceClassAPI).then((response) => {
+        if (response.data.returnCode == 0) {
+          this.deviceClass = response.data.data
+        } else {
+          console.error(response.data.message)
+        }
+      })
     },
     handleDeviceClassChange(value) {
       const selectedDeviceClass = this.deviceClass.find((item) => item.id === value)
@@ -354,11 +215,25 @@ export default {
       this.$refs.eidtParkDriverForm.validate((valid) => {
         if (valid) {
           if (this.isEditing) {
-            alert('修改成功')
-            console.log('修改成功', this.currentParkDriver)
+            const editParkDriverAPI = `${API}/main/updateParkDriver`
+            this.axios.post(editParkDriverAPI, this.currentParkDriver).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getParkDriver()
+              } else {
+                console.error(response.data.message)
+              }
+            })
           } else {
-            alert('新增成功')
-            console.log('新增成功', this.currentParkDriver)
+            const addParkDriverAPI = `${API}/main/insertParkDriver`
+            this.axios.post(addParkDriverAPI, this.currentParkDriver).then((response) => {
+              if (response.data.returnCode == 0) {
+                alert(response.data.message)
+                this.getParkDriver()
+              } else {
+                console.error(response.data.message)
+              }
+            })
           }
           this.dialogVisible = false
         }
@@ -373,9 +248,18 @@ export default {
       this.deleteParkDriverData = scope
     },
     deleteParkDriver() {
-      alert('成功刪除場站設備')
+      const deleteParkDriverAPI = `${API}/main/deleteParkDriver`
+      this.axios
+        .post(deleteParkDriverAPI, { id: this.deleteParkDriverData.id })
+        .then((response) => {
+          if (response.data.returnCode == 0) {
+            alert(response.data.message)
+            this.getParkDriver()
+          } else {
+            console.error(response.data.message)
+          }
+        })
       this.deleteParkDriverDialogVisible = false
-      console.log('成功刪除場站設備', this.deleteParkDriverData.id)
     }
   }
 }
