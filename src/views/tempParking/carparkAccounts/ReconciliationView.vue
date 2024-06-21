@@ -43,7 +43,12 @@
           </span>
         </p>
 
-        <el-table :data="apsData" :row-style="{ height: '50px' }" height="450">
+        <el-table
+          :data="apsData"
+          :row-class-name="apsRowClass"
+          :row-style="{ height: '50px' }"
+          height="450"
+        >
           <el-table-column align="center" prop="parkName" label="場站名稱" />
           <el-table-column align="center" prop="TRANS_DATE" label="結算日期" />
           <el-table-column
@@ -82,7 +87,12 @@
           </span>
         </p>
 
-        <el-table :data="systemFlow" :row-style="{ height: '50px' }" height="450">
+        <el-table
+          :data="systemFlow"
+          :row-class-name="systemRowClass"
+          :row-style="{ height: '50px' }"
+          height="450"
+        >
           <el-table-column align="center" prop="parkName" label="場站名稱" />
           <el-table-column align="center" prop="trx_date" label="入帳日" />
           <el-table-column
@@ -259,13 +269,37 @@ export default {
     async compare() {
       const loading = this.showLoading('載入中...')
       try {
-        await Promise.all([this.getApsStatement(), this.getSystemFlow()])
-        this.discrepancy = this.totalSystemFlow - this.totalAps
+        await Promise.all([this.getApsStatement(), this.getSystemFlow()]).then(() => {
+          this.discrepancy = this.totalSystemFlow - this.totalAps
+          const matchedAmounts = new Set()
+
+          this.apsData.forEach((apsItem) => {
+            const matchingSystemFlow = this.systemFlow.find(
+              (systemItem) =>
+                !matchedAmounts.has(systemItem.s_amount) &&
+                parseInt(systemItem.s_amount) === parseInt(apsItem.TRANS_CASH)
+            )
+            if (matchingSystemFlow) {
+              apsItem.matched = true // 添加匹配標記
+              matchingSystemFlow.matched = true // 添加匹配標記
+              apsItem.parkName = matchingSystemFlow.parkName
+              apsItem.parkId = matchingSystemFlow.parkId
+              matchedAmounts.add(matchingSystemFlow.s_amount)
+            }
+          })
+          loading.close()
+        })
       } catch (err) {
         console.error('Error:', err)
       } finally {
         loading.close()
       }
+    },
+    apsRowClass({ row }) {
+      return row.matched ? 'bg-success text-white' : ''
+    },
+    systemRowClass({ row }) {
+      return row.matched ? 'bg-success text-white' : ''
     },
     async getApsStatement() {
       const getApsDataAPI = `${API}/main/apsStatement`
@@ -387,9 +421,33 @@ export default {
 </script>
 
 <style>
+el-table {
+  max-height: 50vh;
+}
+
+.el-loading-spinner .el-loading-text {
+  font-size: large;
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+  color: #000000 !important;
+  opacity: 0.6;
+}
+
+.el-table__body tr.bg-success:hover > td,
+.el-table__body tr.bg-success:hover {
+  background-color: #6fc5ab !important;
+  border-color: #6fc5ab !important;
+  color: #000000 !important;
+}
+
 .mobile-btns {
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
+}
+
+.el-dialog__title {
+  --el-dialog-title-font-size: 28px;
 }
 </style>
