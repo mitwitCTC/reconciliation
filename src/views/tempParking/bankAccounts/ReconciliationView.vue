@@ -546,6 +546,10 @@ export default {
           this.systemFlow = response.data.data.paymentTrade
           this.countSystemFlow = response.data.data.totalCount
           this.totalSystemFlow = response.data.data.totalAmount
+          this.systemFlow = response.data.data.paymentTrade.map((item) => ({
+            ...item,
+            trade_amount: Number(item.trade_amount) // 將字串轉換為數值
+          }))
         }
       })
     },
@@ -709,6 +713,10 @@ export default {
       return this.axios.post(getsystemFlowDetailsApi, this.searchData).then((response) => {
         if (response.data.returnCode == 0) {
           this.systemFlowDetails = response.data.data
+          this.systemFlowDetails = response.data.data.map((item) => ({
+            ...item,
+            trade_amount: Number(item.trade_amount) // 將字串轉換為數值
+          }))
         }
       })
     },
