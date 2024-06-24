@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2 class="mb-3 text-center">{{ pageTitle }}</h2>
+
     <form class="row align-items-end">
       <div class="col-lg-3 col-md-12">
         <el-date-picker
@@ -536,6 +537,7 @@ export default {
             ...item,
             amount: Number(item.amount) // 將字串轉換為數值
           }))
+          .sort((a, b) => a.amount - b.amount)
         }
       })
     },
@@ -550,6 +552,7 @@ export default {
             ...item,
             trade_amount: Number(item.trade_amount) // 將字串轉換為數值
           }))
+          .sort((a, b) => a.s_amount - b.s_amount)
         }
       })
     },
@@ -707,6 +710,7 @@ export default {
             ...item,
             trade_amount: Number(item.trade_amount) // 將字串轉換為數值
           }))
+          .sort((a, b) => a.s_amount - b.s_amount)
         }
       })
     },

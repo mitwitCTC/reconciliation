@@ -309,10 +309,12 @@ export default {
           this.apsData = response.data.data.paymentTrade
           this.countAps = response.data.data.totalCount
           this.totalAps = response.data.data.totalAmount
-          this.apsData = this.apsData.map((item) => ({
-            ...item,
-            TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
-          }))
+          this.apsData = this.apsData
+            .map((item) => ({
+              ...item,
+              TRANS_CASH: Number(item.TRANS_CASH) // 將字串轉換為數值
+            }))
+            .sort((a, b) => a.TRANS_CASH - b.TRANS_CASH)
         } else {
           console.warn(response.data.message)
         }
@@ -328,10 +330,12 @@ export default {
           this.systemFlow = response.data.data.paymentTrade
           this.countSystemFlow = response.data.data.totalCount
           this.totalSystemFlow = response.data.data.totalAmount
-          this.systemFlow = this.systemFlow.map((item) => ({
-            ...item,
-            trade_amount: Number(item.trade_amount) // 將字串轉換為數值
-          }))
+          this.systemFlow = this.systemFlow
+            .map((item) => ({
+              ...item,
+              trade_amount: Number(item.trade_amount) // 將字串轉換為數值
+            }))
+            .sort((a, b) => a.s_amount - b.s_amount)
         } else {
           console.warn(response.data.message)
         }
@@ -361,6 +365,7 @@ export default {
         })
         if (response.data.returnCode === 0) {
           this.apsDetails = response.data.data.paymentTrade
+          this.apsDetails.sort((a, b) => a.TRANS_CASH - b.TRANS_CASH)
         } else {
           console.warn(response.data.message)
         }
