@@ -70,8 +70,8 @@
           :row-class-name="customRowClassName"
           height="450"
         >
-          <el-table-column align="center" prop="parkName" label="場站名稱" width="180" />
-          <el-table-column align="center" prop="accountDate" label="入帳日" width="180" />
+          <el-table-column align="center" prop="parkName" label="場站名稱" />
+          <el-table-column align="center" prop="accountDate" label="入帳日" />
           <el-table-column
             align="center"
             prop="amount"
@@ -80,7 +80,7 @@
             label="入帳金額"
             width="110"
           />
-          <el-table-column align="center" prop="bankmark" label="備註" width="180" />
+          <el-table-column align="center" prop="bankmark" label="備註" />
         </el-table>
       </div>
       <div class="col-md-6">
@@ -650,16 +650,6 @@ export default {
       this.dialogSystemVisible = false
       this.$refs.addSystemForm.clearValidate()
       this.$refs.searchCashFlowDataForm.clearValidate()
-    },
-    // 數字千分位格式
-    amountFormatter(row, column, cellValue) {
-      cellValue += ''
-      if (!cellValue.includes('.')) cellValue += '.'
-      return cellValue
-        .replace(/(\d)(?=(\d{3})+\.)/g, function ($0, $1) {
-          return $1 + ','
-        })
-        .replace(/\.$/, '')
     },
     compare() {
       const loading = this.showLoading('比對中...')
