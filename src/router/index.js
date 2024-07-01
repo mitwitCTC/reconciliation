@@ -113,9 +113,9 @@ const router = createRouter({
             },
             {
               path: 'carpark-accounts',
-              name: '銀行帳務AB',
+              name: '停車場帳務',
               component: () => import('@/views/tempParking/carparkAccounts/CarparkAccountABView.vue'),
-              meta: { title: '銀行帳務AB' },
+              meta: { title: '停車場帳務' },
               children: [
                 {
                   path: 'reconciliation',
@@ -125,19 +125,19 @@ const router = createRouter({
                 },
                 {
                   path: 'transfer-status',
-                  name: '傳輸狀態AB',
+                  name: '停車場帳務 - 傳輸狀態',
                   component: () => import('@/views/tempParking/carparkAccounts/TransferStatusView.vue'),
                   meta: { title: '傳輸狀態' }
                 },
                 {
                   path: 'work-log',
-                  name: '工作日誌AB',
+                  name: '停車場帳務 - 工作日誌',
                   component: () => import('@/views/tempParking/carparkAccounts/WorkLogsView.vue'),
                   meta: { title: '工作日誌' }
                 },
                 {
                   path: 'subpoena-record',
-                  name: '傳票紀錄AB',
+                  name: '停車場帳務 - 傳票紀錄',
                   component: () => import('@/views/tempParking/carparkAccounts/SubpoenaRecordView.vue'),
                   meta: { title: '傳票紀錄' }
                 }
@@ -145,9 +145,9 @@ const router = createRouter({
             },
             {
               path: 'bank-accounts',
-              name: '銀行帳務BC',
+              name: '銀行帳務',
               component: () => import('@/views/tempParking/bankAccounts/BankAccountsBCView.vue'),
-              meta: { title: '銀行帳務BC' },
+              meta: { title: '銀行帳務' },
               children: [
                 {
                   path: 'reconciliation',
@@ -158,7 +158,7 @@ const router = createRouter({
                 },
                 {
                   path: 'transfer-status',
-                  name: '傳輸狀態',
+                  name: '銀行帳務 - 傳輸狀態',
                   component: () =>
                     import('@/views/tempParking/bankAccounts/TransferStatusView.vue'),
                   meta: { title: '傳輸狀態' }
@@ -171,7 +171,7 @@ const router = createRouter({
                 },
                 {
                   path: 'work-log',
-                  name: '工作日誌',
+                  name: '銀行帳務 - 工作日誌',
                   component: () => import('@/views/tempParking/bankAccounts/WorkLogsView.vue'),
                   meta: { title: '工作日誌' }
                 },

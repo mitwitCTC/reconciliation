@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>{{ text }}</p>
+        <p>{{ pageTitle }}</p>
         <p>頁面建置中...</p>
     </div>  
 </template>
@@ -9,7 +9,7 @@
 export default {
     data(){
         return {
-            text: "工作日誌 AB"
+            
         }
     },
 }
