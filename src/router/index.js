@@ -130,12 +130,6 @@ const router = createRouter({
                   meta: { title: '傳輸狀態' }
                 },
                 {
-                  path: 'cash-in-transit',
-                  name: '轉在途現金AB',
-                  component: () => import('@/views/tempParking/carparkAccounts/CashInTransitView.vue'),
-                  meta: { title: '轉在途現金' }
-                },
-                {
                   path: 'work-log',
                   name: '工作日誌AB',
                   component: () => import('@/views/tempParking/carparkAccounts/WorkLogsView.vue'),
